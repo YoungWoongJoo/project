@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycom.warehouse.common.Controller.BaseController;
@@ -61,11 +62,16 @@ public class WarehouseControllerImpl extends BaseController implements Warehouse
 	}
 	
 	@Override
-	@RequestMapping(value="/updateForm.do", method = RequestMethod.POST)
+	@RequestMapping(value="/updateForm.do")
 	public ModelAndView warehouseUpdateForm(@ModelAttribute("warehouseVO") WarehouseVO warehouseVO, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView mav = new ModelAndView();
 		String viewName = (String)request.getAttribute("viewName");
+		HttpSession session = request.getSession();
+		memberVO = (MemberVO)session.getAttribute("memberVO");
+		String member_id = memberVO.getMember_id();
+		List<WarehouseVO> warehouseList = warehouseService.listWarehouse(member_id);
 		mav.addObject("warehouseVO", warehouseVO);
+		mav.addObject("warehouseList", warehouseList);
 		mav.setViewName(viewName);
 		return mav;
 	}
@@ -75,7 +81,7 @@ public class WarehouseControllerImpl extends BaseController implements Warehouse
 	public ModelAndView updateWarehouse(@ModelAttribute("warehouseVO") WarehouseVO warehouseVO, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView mav = new ModelAndView();
 		warehouseService.update(warehouseVO);
-		mav.setViewName("redirect:/warehouse/register.do");
+		mav.setViewName("redirect:/mypage/main.do");
 		return mav;
 	}
 
@@ -88,7 +94,14 @@ public class WarehouseControllerImpl extends BaseController implements Warehouse
 		mav.setViewName("redirect:/mypage/main.do");
 		return mav;
 	}
-	
-	
 
+	@Override
+	@ResponseBody
+	@RequestMapping(value="/searchWarehouse.do")
+	public WarehouseVO searchWarehouse(String warehouse_name, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		warehouseVO = warehouseService.searchWarehouse(warehouse_name);
+		return warehouseVO;
+	}
+	
 }

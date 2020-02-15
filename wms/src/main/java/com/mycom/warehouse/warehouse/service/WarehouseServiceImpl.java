@@ -26,7 +26,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 	
 	@Override
 	public WarehouseVO searchWarehouse(String warehouse_name) throws Exception {
-		warehouseVO = searchWarehouse(warehouse_name);
+		warehouseVO = warehouseDao.searchWarehouse(warehouse_name);
 		return warehouseVO;
 	}
 

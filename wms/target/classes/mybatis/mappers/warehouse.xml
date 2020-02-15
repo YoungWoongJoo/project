@@ -20,6 +20,10 @@
 		]]>
 	</select>
 	
+	<select id="searchWarehouse" resultMap="warehouseResult" parameterType="String">
+		select * from t_warehouse where warehouse_name=#{warehouse_name}
+	</select>
+	
 	<insert id="insertNewWarehouse" parameterType="warehouseVO">
   <![CDATA[
     	insert into t_warehouse(warehouse_name, 

@@ -56,7 +56,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
             form.append(code);
             form.append(region);
             form.append(rating);
-            form.attr("method",'get');
+            form.attr("method",'POST');
             form.attr("action", "${contextPath}/warehouse/updateForm.do");
             form.appendTo('body');
             form.submit();
@@ -76,6 +76,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
 	<ul>
 		<li><a href="${contextPath}/mypage/updateForm.do">회원 정보 수정</a></li>
 		<li><a href="${contextPath}/warehouse/register.do">창고 등록</a></li>
+		<li><a href="${contextPath}/warehouse/updateForm.do">창고 수정</a></li>
 		<li><a href="${contextPath}/stock/register.do">재고 등록</a></li>
 		<li><a href="${contextPath}/stock/list.do">재고 현황</a></li>
 	</ul>

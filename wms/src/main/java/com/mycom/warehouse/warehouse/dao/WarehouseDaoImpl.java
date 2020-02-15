@@ -14,12 +14,20 @@ import com.mycom.warehouse.warehouse.vo.WarehouseVO;
 public class WarehouseDaoImpl implements WarehouseDao{
 	@Autowired
 	SqlSession sqlSession;
+	@Autowired
+	WarehouseVO warehouseVO;
 	
 	@Override
 	public List<WarehouseVO> selectWarehouseList(String member_id) throws DataAccessException {
 		List<WarehouseVO> list = new ArrayList<WarehouseVO>();
 		list = sqlSession.selectList("mapper.warehouse.selectWarehouseList",member_id);
 		return list;
+	}
+	
+	@Override
+	public WarehouseVO searchWarehouse(String warehouse_name) throws DataAccessException {
+		warehouseVO = sqlSession.selectOne("mapper.warehouse.searchWarehouse", warehouse_name);
+		return warehouseVO;
 	}
 
 	@Override
