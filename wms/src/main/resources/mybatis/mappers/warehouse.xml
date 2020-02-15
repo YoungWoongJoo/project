@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.warehouse">
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="warehouseResult" type="WarehouseVO">
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="warehouse_owner" column="warehouse_owner" />
+		<result property="warehouse_code" column="warehouse_code" />
+		<result property="warehouse_region" column="warehouse_region" />
+		<result property="warehouse_rating" column="warehouse_rating" />
+		<result property="member_id" column="member_id" />
+	</resultMap>
+	
+	<select id="selectWarehouseList" resultMap="warehouseResult" parameterType="String">
+		<![CDATA[
+		select * from t_warehouse where member_id=#{member_id}
+		]]>
+	</select>
+	
+	<insert id="insertNewWarehouse" parameterType="warehouseVO">
+  <![CDATA[
+    	insert into t_warehouse(warehouse_name, 
+    							warehouse_owner, 
+    							warehouse_code, 
+    							warehouse_region, 
+    							warehouse_rating, 
+    							member_id) 
+    					 values(#{warehouse_name}, 
+    							#{warehouse_owner}, 
+    							#{warehouse_code},
+    							#{warehouse_region},
+    							#{warehouse_rating},
+    							#{member_id})
+   ]]>
+	</insert>
+	
+	<update id="updateWarehouse" parameterType="warehouseVO">
+		update t_warehouse set 	warehouse_owner = #{warehouse_owner},
+								warehouse_code = #{warehouse_code},
+								warehouse_region = #{warehouse_region},
+								warehouse_rating = #{warehouse_rating}
+					where warehouse_name = #{warehouse_name}
+	</update>
+	
+	<delete id="deleteWarehouse" parameterType="warehouseVO">
+		delete from t_warehouse where warehouse_name = #{warehouse_name}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.stock">
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="stockResult" type="StockVO">
+		<result property="stock_seq_num" column="stock_seq_num"/>
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="stock_year" column="stock_year" />
+		<result property="stock_sort" column="stock_sort" />
+		<result property="stock_unit" column="stock_unit" />
+		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
+		<result property="stock_quantity_bag" column="stock_quantity_bag" />
+	</resultMap>
+	
+	<select id="selectStockList" resultMap="stockResult" parameterType="String">
+		<![CDATA[
+		select * from t_stock where warehouse_name=#{warehouse_name} and stock_quantity_40kg != 0
+		]]>
+	</select>
+	
+	<insert id="insertNewStock" parameterType="stockVO">
+		<selectKey resultType="int" keyProperty="stock_seq_num" order="BEFORE">
+			select stock_seq_num.nextval from dual
+		</selectKey>
+		insert into t_stock(stock_seq_num,
+							warehouse_name,
+							stock_year,
+							stock_sort,
+							stock_unit,
+							stock_quantity_40kg,
+							stock_quantity_bag)
+					values(#{stock_seq_num},
+							#{warehouse_name},
+							#{stock_year},
+							#{stock_sort},
+							#{stock_unit},
+							#{stock_quantity_40kg},
+							#{stock_quantity_bag})
+	</insert>
+	
+</mapper>
