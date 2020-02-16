@@ -14,7 +14,9 @@ import com.mycom.warehouse.stock.vo.StockVO;
 import com.mycom.warehouse.stock.vo.StockVOs;
 
 public interface StockController {
-	public ResponseEntity<String> register(@RequestParam("warehouse_name") String warehouse_name, @ModelAttribute("stockVOs") StockVOs stockVOs, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public ModelAndView registerForm(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public ResponseEntity<String> addNewStock(@RequestParam("warehouse_name") String warehouse_name, @ModelAttribute("stockVOs") StockVOs stockVOs, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<List<StockVO>> getList(@RequestParam("warehouse_name") String warehouse_name, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public int yearToStringTwoNum();
 }

@@ -5,9 +5,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script>
-      var index = 0;
       $(document).ready(function() {
         $("input:radio[name='warehouse_rating']").click(function() {
           if ($("#warehouse_rating").is(":checked")) {
@@ -23,95 +22,6 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           $("#warehouse_rating").val(value);
         });
       });
-
-      function fn_register() {
-        var warehouse_name = $("#_warehouse_name").val();
-        $("#warehouse_name").val(warehouse_name);
-        $("#frm_warehouse").attr(
-          "action",
-          "${contextPath}/warehouse/addWarehouse.do"
-        );
-        $("#frm_warehouse").submit();
-      }
-
-      function fn_update() {
-        var checked = $("input:radio[id='radioName']").is(":checked");
-        if (checked == true) {
-          $("#frm_title").val("창고 수정하기");
-          $("#frm_warehouse").attr("style", "display:block");
-          $("#frm_stock").attr("style", "display:none");
-          var radio = $('$("#radioName"):checked');
-          var tr = radio.parent().parent();
-          var td = tr.children();
-          $("input[name=warehouse_name]").val(td.eq(1).text());
-          $("input[name=_warehouse_name]").val(td.eq(1).text());
-          $("input[name=warehouse_owner]").val(td.eq(2).text());
-          $("input[name=warehouse_code]").val(td.eq(3).text());
-          $("input[name=warehouse_rating]").val(td.eq(4).text());
-
-          $("#btn_submit").val("수정하기");
-          $("input[name=_warehouse_name]").prop("disabled", true);
-          $("#frm_warehouse").attr(
-            "action",
-            "${contextPath}/warehouse/updateWarehouse.do"
-          );
-          $("#btn_submit").removeAttr("onclick");
-        } else {
-          alert(
-            "선택된 창고가 없습니다.\n위에서 수정하고 싶은 창고를 선택해주세요."
-          );
-        }
-      }
-
-      function fn_stock_register() {
-        var checked = $("input:radio[id='radioName']").is(":checked");
-        if (checked == true) {
-          $("#frm_warehouse").attr("style", "display:none");
-          $("#frm_stock").attr("style", "display:block");
-          var radio = $('$("#radioName"):checked');
-          var tr = radio.parent().parent();
-          var td = tr.children();
-          $("select#select_wh").val(td.eq(1).text());
-        } else {
-          alert(
-            "선택된 창고가 없습니다.\n위에서 수정하고 싶은 창고를 선택해주세요."
-          );
-        }
-      }
-
-      function fn_add_row() {
-        $("#stock_table>tbody:last").append(
-          "<tr>" +
-            '<td><input type="text" name="stockVO[' +
-            index +
-            '].stock_year" required></td>' +
-            '<td><input type="text" name="stockVO[' +
-            index +
-            '].stock_sort" required></td>' +
-            '<td><select name="stockVO[' +
-            index +
-            '].stock_unit" required>' +
-            "<option selected disabled>선택</option>" +
-            '<option value="10">10kg</option>' +
-            '<option value="20">20kg</option>' +
-            '<option value="40">40kg</option>' +
-            '<option value="800">800kg</option>' +
-            '<option value="1000">1000kg</option>' +
-            "</select></td>" +
-            '<td><input type="text" name="stockVO[' +
-            index +
-            '].stock_quantity_40kg"required></td>' +
-            '<td><input type="button" value="삭제" onclick="fn_delete_row(this)"></td>' +
-            "</tr>"
-        );
-        index++;
-      }
-      function fn_delete_row(obj) {
-        $(obj)
-          .parent()
-          .parent()
-          .remove();
-      }
     </script>
     <title>창고 등록</title>
   </head>
@@ -124,11 +34,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     >
       <h2 id="frm_title">창고 등록하기</h2>
       창고명 :
-      <input
-        type="text"
-        name="warehouse_name"
-        required
-      /><br />
+      <input type="text" name="warehouse_name" required /><br />
       창고주명 :
       <input
         type="text"
@@ -184,39 +90,6 @@ uri="http://java.sun.com/jsp/jstl/core"%>
 
       <p>
         <input type="submit" id="btn_submit" value="등록하기" />
-        <input type="reset" value="취소" />
-      </p>
-    </form>
-
-    <form
-      id="frm_stock"
-      method="POST"
-      style="display: none"
-      action="${contextPath}/stock/register.do"
-    >
-      <h2>재고 등록하기</h2>
-      창고 :
-      <select id="select_wh" name="warehouse_name">
-        <c:forEach var="warehouse" items="${warehouseList}">
-          <option>${warehouse.warehouse_name}</option>
-        </c:forEach> </select
-      ><br />
-      <p></p>
-      <table border="1" id="stock_table">
-        <thead>
-          <th>년산</th>
-          <th>곡종</th>
-          <th>단량</th>
-          <th>수량</th>
-          <th></th>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <p>
-        <input type="button" value="품목 추가" onclick="fn_add_row()" />
-      </p>
-      <p>
-        <input type="submit" value="등록하기" />
         <input type="reset" value="취소" />
       </p>
     </form>

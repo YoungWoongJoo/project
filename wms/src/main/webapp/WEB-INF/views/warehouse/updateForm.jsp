@@ -7,26 +7,21 @@ uri="http://java.sun.com/jsp/jstl/core"%>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script>
-      var index = 0;
       $(document).ready(function() {
         var name = "${warehouseVO.warehouse_name}";
         var owner = "${warehouseVO.warehouse_owner}";
         var code = "${warehouseVO.warehouse_code}";
         var region = "${warehouseVO.warehouse_region}";
         var rating = "${warehouseVO.warehouse_rating}";
-        if(name != null && name!= "")
-        {
+        if (name != null && name != "") {
           $("#select_wh").val(name);
           $("#warehouse_owner").val(owner);
           $("#warehouse_code").val(code);
-          $("input[value="+region+"]").attr("checked", true);
-          if(rating=="저온창고")
-          {
-            $("input[value="+rating+"]").attr("checked", true);
-          }
-          else
-          {
-            $("#warehouse_rating").attr("checked",true);
+          $("input[value=" + region + "]").attr("checked", true);
+          if (rating == "저온창고") {
+            $("input[value=" + rating + "]").attr("checked", true);
+          } else {
+            $("#warehouse_rating").attr("checked", true);
             $("#warehouse_rating").val(rating);
             $("#detail_view").attr("style", "display:block");
             $("#detail_rating").val(rating);
@@ -50,25 +45,28 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         $("#select_wh").change(function() {
           var warehouse_name = this.value;
           $.ajax({
-            type : "post",
-            async : true,
-            url : "${contextPath}/warehouse/searchWarehouse.do",
-            dataType : "Text",
-            data : {warehouse_name : warehouse_name},
-            success : function(data){
+            type: "post",
+            async: true,
+            url: "${contextPath}/warehouse/searchWarehouse.do",
+            dataType: "Text",
+            data: { warehouse_name: warehouse_name },
+            success: function(data) {
               var warehouseVO = JSON.parse(data);
               $("#select_wh").val(warehouseVO.warehouse_name);
               $("#warehouse_owner").val(warehouseVO.warehouse_owner);
               $("#warehouse_code").val(warehouseVO.warehouse_code);
-              $("input[value="+warehouseVO.warehouse_region+"]").attr("checked", true);
-              if(warehouseVO.warehouse_rating=="저온창고")
-              {
-                $("input[value="+warehouseVO.warehouse_rating+"]").attr("checked", true);
+              $("input[value=" + warehouseVO.warehouse_region + "]").attr(
+                "checked",
+                true
+              );
+              if (warehouseVO.warehouse_rating == "저온창고") {
+                $("input[value=" + warehouseVO.warehouse_rating + "]").attr(
+                  "checked",
+                  true
+                );
                 $("#detail_view").attr("style", "display:none");
-              }
-              else
-              {
-                $("#warehouse_rating").attr("checked",true);
+              } else {
+                $("#warehouse_rating").attr("checked", true);
                 $("#warehouse_rating").val(warehouseVO.warehouse_rating);
                 $("#detail_view").attr("style", "display:block");
                 $("#detail_rating").val(warehouseVO.warehouse_rating);
@@ -78,11 +76,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
               //alert("에러가 발생했습니다. 다시 시도해주세요.");
             },
             complete: function(data, textStatus) {
-             //alert("작업을완료 했습니다");
+              //alert("작업을완료 했습니다");
             }
           });
         });
-
       });
     </script>
     <title>창고 수정</title>
@@ -99,8 +96,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <option value="선택" selected disabled>선택</option>
         <c:forEach var="warehouse" items="${warehouseList}">
           <option>${warehouse.warehouse_name}</option>
-        </c:forEach>
-      </select><br>
+        </c:forEach> </select
+      ><br />
       창고주명 :
       <input
         type="text"
