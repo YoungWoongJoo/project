@@ -1,5 +1,6 @@
 package com.mycom.warehouse.stock.controller;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycom.warehouse.common.Controller.BaseController;
+import com.mycom.warehouse.member.vo.MemberVO;
 import com.mycom.warehouse.stock.service.StockService;
 import com.mycom.warehouse.stock.vo.StockVO;
 import com.mycom.warehouse.stock.vo.StockVOs;
@@ -31,10 +33,27 @@ public class StockControllerImpl extends BaseController implements StockControll
 	StockService stockService;
 	@Autowired
 	WarehouseService warehouseService;
+	@Autowired
+	MemberVO memberVO;
 
 	@Override
 	@RequestMapping(value="/register.do")
-	public ResponseEntity<String> register(@RequestParam("warehouse_name") String warehouse_name, @ModelAttribute("stockVOs") StockVOs stockVOs, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView registerForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String viewName = (String)request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);
+		HttpSession session = request.getSession();
+		memberVO = (MemberVO)session.getAttribute("memberVO");
+		String member_id = memberVO.getMember_id();
+		List<WarehouseVO> warehouseList = warehouseService.listWarehouse(member_id);
+		mav.addObject("warehouseList", warehouseList);
+		int year = yearToStringTwoNum();
+		mav.addObject("year", year);
+		return mav;
+	}
+
+	@Override
+	@RequestMapping(value="/addNewStock.do")
+	public ResponseEntity<String> addNewStock(@RequestParam("warehouse_name") String warehouse_name, @ModelAttribute("stockVOs") StockVOs stockVOs, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String message;
 		ResponseEntity<String> resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -111,5 +130,17 @@ public class StockControllerImpl extends BaseController implements StockControll
 		mav.setViewName(viewName);
 		return mav;
 	}
+
+	@Override
+	public int yearToStringTwoNum() {
+		Calendar cal = Calendar.getInstance();
+		int intYear = cal.get(Calendar.YEAR);
+		String stringYear = Integer.toString(intYear);
+		stringYear = stringYear.substring(2);
+		intYear = Integer.parseInt(stringYear);
+		return intYear;
+	}
+	
+	
 
 }
