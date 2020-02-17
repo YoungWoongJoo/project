@@ -17,16 +17,26 @@ public class StockServiceImpl implements StockService {
 	StockDao stockDao;
 	
 	@Override
-	public void register(StockVO[] stockVO) throws Exception {
-		for(StockVO item : stockVO)
-		{
-			stockDao.insertNewStock(item);
-		}
+	public void register(StockVO stockVO) throws Exception {
+
+		stockDao.insertNewStock(stockVO);
 	}
 
 	@Override
 	public List<StockVO> list(String warehouse_name) throws Exception {
 		return stockDao.selectStockList(warehouse_name);
+	}
+
+	@Override
+	public void update(StockVO stockVO) throws Exception {
+		stockDao.updateStock(stockVO);
+		
+	}
+
+	@Override
+	public void delete(StockVO stockVO) throws Exception {
+		stockDao.deleteStock(stockVO);
+		
 	}
 
 }

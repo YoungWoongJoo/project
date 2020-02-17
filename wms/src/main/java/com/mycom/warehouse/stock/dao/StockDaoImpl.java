@@ -24,4 +24,16 @@ public class StockDaoImpl implements StockDao {
 		return sqlSession.selectList("mapper.stock.selectStockList", warehouse_name);
 	}
 
+	@Override
+	public void updateStock(StockVO stockVO) throws DataAccessException {
+		sqlSession.insert("mapper.stock.updateStock", stockVO);
+		
+	}
+
+	@Override
+	public void deleteStock(StockVO stockVO) throws DataAccessException {
+		sqlSession.insert("mapper.stock.deleteStock", stockVO);
+		
+	}
+
 }

@@ -8,6 +8,11 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script>
       $(document).ready(function() {
+        var warehouse_name = "${warehouse_name}";
+        if (warehouse_name != "" && warehouse_name != null) {
+          $("#select_wh").val(warehouse_name);
+        }
+
         $("input[name='stock_sort1']").change(function() {
           var text = "";
           $("#sort_detail").empty();
