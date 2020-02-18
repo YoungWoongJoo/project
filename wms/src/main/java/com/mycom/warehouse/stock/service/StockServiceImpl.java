@@ -39,4 +39,10 @@ public class StockServiceImpl implements StockService {
 		
 	}
 
+	@Override
+	public StockVO search(StockVO stockVO) throws Exception {
+		stockVO = stockDao.searchStock(stockVO);
+		return stockVO;
+	}
+
 }

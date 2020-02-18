@@ -19,7 +19,7 @@
 	
 	<select id="selectStockList" resultMap="stockResult" parameterType="String">
 		<![CDATA[
-		select * from t_stock where warehouse_name=#{warehouse_name}
+		select * from t_stock where warehouse_name=#{warehouse_name} order by stock_seq_num
 		]]>
 	</select>
 	
@@ -46,7 +46,8 @@
 	</insert>
 	
 	<update id="updateStock" parameterType="stockVO">
-		update t_stock set 		stock_year = #{stock_year},
+		update t_stock set 		warehouse_name = #{warehouse_name},
+								stock_year = #{stock_year},
 								stock_sort1 = #{stock_sort1},
 								stock_sort2 = #{stock_sort2},
 								stock_unit = #{stock_unit},
@@ -58,5 +59,9 @@
 	<delete id="deleteStock" parameterType="stockVO">
 		delete from t_stock where stock_seq_num = #{stock_seq_num}
 	</delete>
+	
+	<select id="searchStock" resultMap="stockResult" parameterType="stockVO">
+		select * from t_stock where stock_seq_num = #{stock_seq_num}
+	</select>
 	
 </mapper>

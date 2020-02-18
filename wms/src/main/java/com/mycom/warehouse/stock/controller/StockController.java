@@ -18,6 +18,7 @@ public interface StockController {
 	public ResponseEntity<String> addNewStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<List<StockVO>> getList(@RequestParam("warehouse_name") String warehouse_name, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public ModelAndView updateForm(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<String> updateStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<String> deleteStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;	
 	public int yearToStringTwoNum();

@@ -16,7 +16,7 @@
 	
 	<select id="selectWarehouseList" resultMap="warehouseResult" parameterType="String">
 		<![CDATA[
-		select * from t_warehouse where member_id=#{member_id}
+		select * from t_warehouse where member_id=#{member_id} order by warehouse_name
 		]]>
 	</select>
 	

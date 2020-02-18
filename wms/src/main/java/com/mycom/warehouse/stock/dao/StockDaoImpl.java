@@ -32,8 +32,14 @@ public class StockDaoImpl implements StockDao {
 
 	@Override
 	public void deleteStock(StockVO stockVO) throws DataAccessException {
-		sqlSession.insert("mapper.stock.deleteStock", stockVO);
+		sqlSession.delete("mapper.stock.deleteStock", stockVO);
 		
+	}
+
+	@Override
+	public StockVO searchStock(StockVO stockVO) throws DataAccessException {
+		stockVO = sqlSession.selectOne("mapper.stock.searchStock", stockVO);
+		return stockVO;
 	}
 
 }

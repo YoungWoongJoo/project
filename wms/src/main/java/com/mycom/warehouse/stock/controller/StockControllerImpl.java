@@ -34,6 +34,8 @@ public class StockControllerImpl extends BaseController implements StockControll
 	WarehouseService warehouseService;
 	@Autowired
 	MemberVO memberVO;
+	@Autowired
+	StockVO stockVO;
 
 	@Override
 	@RequestMapping(value="/register.do")
@@ -118,7 +120,8 @@ public class StockControllerImpl extends BaseController implements StockControll
 		ModelAndView mav = new ModelAndView();
 		String viewName = (String) request.getAttribute("viewname");
 		HttpSession session = request.getSession();
-		String member_id = (String)session.getAttribute("member_id");
+		memberVO =  (MemberVO)session.getAttribute("memberVO");
+		String member_id = memberVO.getMember_id();
 		List<WarehouseVO> list = warehouseService.listWarehouse(member_id);
 		mav.addObject("warehouseList", list);
 		mav.setViewName(viewName);
@@ -126,13 +129,53 @@ public class StockControllerImpl extends BaseController implements StockControll
 	}
 
 	@Override
-	@RequestMapping(value="/updateStock.do")
+	@RequestMapping(value="/updateForm.do")
+	public ModelAndView updateForm(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		String viewName = (String)request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);
+		HttpSession session = request.getSession();
+		memberVO =  (MemberVO)session.getAttribute("memberVO");
+		String member_id = memberVO.getMember_id();
+		List<WarehouseVO> list = warehouseService.listWarehouse(member_id);
+		mav.addObject("warehouseList", list);
+		stockVO = stockService.search(stockVO);
+		mav.addObject("stockVO", stockVO);
+		int year = yearToStringTwoNum();
+		mav.addObject("year", year);
+		return mav;
+	}
+
+	@Override
+	@RequestMapping(value="/update.do")
 	public ResponseEntity<String> updateStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String message;
 		ResponseEntity<String> resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		
+		String stock_quantity_40kg = stockVO.getStock_quantity_40kg();
+		String[] quantity = stock_quantity_40kg.split("."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+		int unit = Integer.parseInt(stockVO.getStock_unit());
+		double bag; //단량별 포대 개수
+		
+		//단량별 포대 개수 계산 시작
+		if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
+		{
+			bag = (Double.parseDouble(stock_quantity_40kg)*40)/(double)unit;
+			bag = Math.ceil(bag);
+		}
+		else //수량이 실수일경우 (짜투리가 있을경우)
+		{
+			double total;
+			total = (Double.parseDouble(quantity[0])*Double.parseDouble(stockVO.getStock_unit())+Double.parseDouble(quantity[1]));//총kg
+			bag = total/(double)unit;
+			bag = Math.ceil(bag);
+		}
+		stockVO.setStock_quantity_bag(Integer.toString((int)bag));
+		//단량별 포대 개수 계산 끝
+		
 		try {
 			stockService.update(stockVO);
 		    message  = "<script>";
@@ -153,7 +196,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 	}
 
 	@Override
-	@RequestMapping(value="/deleteStock.do")
+	@RequestMapping(value="/delete.do")
 	public ResponseEntity<String> deleteStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String message;
@@ -163,7 +206,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 		try {
 			stockService.delete(stockVO);
 		    message  = "<script>";
-		    message +=" alert('재고 등록을 마쳤습니다.재고 현황창으로 이동합니다.');";
+		    message +=" alert('재고 삭제를 마쳤습니다.재고 현황창으로 이동합니다.');";
 		    message += " location.href='"+request.getContextPath()+"/stock/list.do';";
 		    message += " </script>";
 		    
