@@ -14,7 +14,7 @@
 
 			$.ajax({
 				type : "post",
-				async : "false",
+				async : "true",
 				url : "${contextPath}/stock/getList.do",
 				dataType : "Text",
 				data : {warehouse_name : wh_name},
@@ -26,16 +26,30 @@
 							+ '<th>단량</th>'
 							+ '<th>수량</th>'
 							+ '<th>포대수</th>'
+							+ '<th>수정</th>'
+							+ '<th>삭제</th>'
 							+ '</thead>';
 					if (stockVO.length != 0) {
 						$.each(stockVO,function(i){
 							str += '<tr>'
+								+ "<input type='hidden' name='stock_seq_num' value="+stockVO[i].stock_seq_num+">"
 								+ '<td>'+stockVO[i].stock_year+'</td>'
-								+ '<td>'+stockVO[i].stock_sort+'</td>'
+								+ '<td>'+stockVO[i].stock_sort2+stockVO[i].stock_sort1+'</td>'
 								+ '<td>'+stockVO[i].stock_unit+'</td>'
 								+ '<td>'+stockVO[i].stock_quantity_40kg+'</td>'
-								+ '<td>'+stockVO[i].stock_quantity_bag+'</td>'
-								+ '</tr>';
+								+ '<td>'+stockVO[i].stock_quantity_bag+'</td><td>';
+							if(stockVO[i].stock_state == 'enable')
+							{
+								str += "<input type='button' id='update_stock' value='수정' onclick='fn_update(this)'>";
+								str += "</td><td>";
+								str += "<input type='button' id='delete_stock' value='삭제' onclick='fn_delete(this)'>";
+							}
+							else{
+								str += "불가";
+								str += "</td><td>";
+								str += "불가";
+							}
+							str += '</td></tr>';
 						});
 					} else {
 						str += '<tr><td colspan="5">선택된 창고에 재고가 없습니다.</td></tr>';
@@ -51,6 +65,29 @@
 			});
 		});
 	});
+
+	function fn_update(obj){
+		var tr = $(obj).parent().parent();
+		var form = $("<form></form>");
+		var stock_seq_num = $("<input type='hidden' name='stock_seq_num' value="+tr.children().eq(0).val()+">");
+		form.append(stock_seq_num);
+		form.attr("method", 'post');
+		form.attr("action", '${contextPath}/stock/updateForm.do');
+		form.appendTo('body');
+		form.submit();
+	};
+
+	function fn_delete(obj){
+		var tr = $(obj).parent().parent();
+		var form = $("<form></form>");
+		var stock_seq_num = $("<input type='hidden' name='stock_seq_num' value="+tr.children().eq(0).val()+">");
+		form.append(stock_seq_num);
+		form.attr("method", 'post');
+		form.attr("action", '${contextPath}/stock/delete.do');
+		form.appendTo('body');
+		form.submit();
+	}
+
 </script>
 <title>재고 현황</title>
 </head>

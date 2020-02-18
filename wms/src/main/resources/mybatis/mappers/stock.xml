@@ -9,15 +9,17 @@
 		<result property="stock_seq_num" column="stock_seq_num"/>
 		<result property="warehouse_name" column="warehouse_name" />
 		<result property="stock_year" column="stock_year" />
-		<result property="stock_sort" column="stock_sort" />
+		<result property="stock_sort1" column="stock_sort1" />
+		<result property="stock_sort2" column="stock_sort2" />
 		<result property="stock_unit" column="stock_unit" />
 		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
 		<result property="stock_quantity_bag" column="stock_quantity_bag" />
+		<result property="stock_state" column="stock_state" />
 	</resultMap>
 	
 	<select id="selectStockList" resultMap="stockResult" parameterType="String">
 		<![CDATA[
-		select * from t_stock where warehouse_name=#{warehouse_name} and stock_quantity_40kg != 0
+		select * from t_stock where warehouse_name=#{warehouse_name} order by stock_seq_num
 		]]>
 	</select>
 	
@@ -28,17 +30,38 @@
 		insert into t_stock(stock_seq_num,
 							warehouse_name,
 							stock_year,
-							stock_sort,
+							stock_sort1,
+							stock_sort2,
 							stock_unit,
 							stock_quantity_40kg,
 							stock_quantity_bag)
 					values(#{stock_seq_num},
 							#{warehouse_name},
 							#{stock_year},
-							#{stock_sort},
+							#{stock_sort1},
+							#{stock_sort2},
 							#{stock_unit},
 							#{stock_quantity_40kg},
 							#{stock_quantity_bag})
 	</insert>
+	
+	<update id="updateStock" parameterType="stockVO">
+		update t_stock set 		warehouse_name = #{warehouse_name},
+								stock_year = #{stock_year},
+								stock_sort1 = #{stock_sort1},
+								stock_sort2 = #{stock_sort2},
+								stock_unit = #{stock_unit},
+								stock_quantity_40kg = #{stock_quantity_40kg},
+								stock_quantity_bag = #{stock_quantity_bag}
+					where stock_seq_num = #{stock_seq_num}
+	</update>
+	
+	<delete id="deleteStock" parameterType="stockVO">
+		delete from t_stock where stock_seq_num = #{stock_seq_num}
+	</delete>
+	
+	<select id="searchStock" resultMap="stockResult" parameterType="stockVO">
+		select * from t_stock where stock_seq_num = #{stock_seq_num}
+	</select>
 	
 </mapper>
