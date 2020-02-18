@@ -67,6 +67,28 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         }
       }
 
+      function fn_stock_register() {
+        var checked = $("input:radio[id='radioName']").is(":checked");
+        if (checked == true) {
+          var radio = $('$("#radioName"):checked');
+          var tr = radio.parent().parent();
+          var td = tr.children();
+          
+          var form = $("<form></form>");
+          var name = $("<input type='hidden' name='warehouse_name' value="+td.eq(1).text()+">");
+                                
+            form.append(name);
+            form.attr("method",'POST');
+            form.attr("action", "${contextPath}/stock/register.do");
+            form.appendTo('body');
+            form.submit();
+        } else {
+          alert(
+            "선택된 창고가 없습니다.\n위에서 재고를 등록하고 싶은 창고를 선택해주세요."
+          );
+        }
+      }
+
 	</script>
 
     <title>마이 페이지</title>
@@ -115,7 +137,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
 	</table>
 	<p></p><input type="button" value="창고등록" onclick="location.href='${contextPath}/warehouse/register.do'">
     <c:if test="${not empty warehouseList }">
-		<input type="button" value="재고등록" onclick="location.href='${contextPath}/stock/register.do'">
+		<input type="button" value="재고등록" onclick="fn_stock_register()">
     	<input type="button" value="수정하기" onclick="fn_update()"> 
 		<input type="button" value="삭제하기" onclick="fn_delete()"> 
 		

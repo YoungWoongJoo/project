@@ -7,10 +7,12 @@ public class StockVO {
 	private int stock_seq_num;
 	private String warehouse_name;
 	private String stock_year;
-	private String stock_sort;
+	private String stock_sort1;
+	private String stock_sort2;
 	private String stock_unit;
 	private String stock_quantity_40kg;
 	private String stock_quantity_bag;
+	private String stock_state;
 	
 	public int getStock_seq_num() {
 		return stock_seq_num;
@@ -30,11 +32,18 @@ public class StockVO {
 	public void setStock_year(String stock_year) {
 		this.stock_year = stock_year;
 	}
-	public String getStock_sort() {
-		return stock_sort;
+	
+	public String getStock_sort1() {
+		return stock_sort1;
 	}
-	public void setStock_sort(String stock_sort) {
-		this.stock_sort = stock_sort;
+	public void setStock_sort1(String stock_sort1) {
+		this.stock_sort1 = stock_sort1;
+	}
+	public String getStock_sort2() {
+		return stock_sort2;
+	}
+	public void setStock_sort2(String stock_sort2) {
+		this.stock_sort2 = stock_sort2;
 	}
 	public String getStock_unit() {
 		return stock_unit;
@@ -53,5 +62,11 @@ public class StockVO {
 	}
 	public void setStock_quantity_bag(String stock_quantity_bag) {
 		this.stock_quantity_bag = stock_quantity_bag;
+	}
+	public String getStock_state() {
+		return stock_state;
+	}
+	public void setStock_state(String stock_state) {
+		this.stock_state = stock_state;
 	}
 }
