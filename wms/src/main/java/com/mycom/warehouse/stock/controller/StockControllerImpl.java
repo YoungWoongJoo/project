@@ -1,6 +1,5 @@
 package com.mycom.warehouse.stock.controller;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,12 +61,12 @@ public class StockControllerImpl extends BaseController implements StockControll
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 		
+		//단량별 포대 개수 계산 시작
 		String stock_quantity_40kg = stockVO.getStock_quantity_40kg();
 		String[] quantity = stock_quantity_40kg.split("."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
 		int unit = Integer.parseInt(stockVO.getStock_unit());
 		double bag; //단량별 포대 개수
 		
-		//단량별 포대 개수 계산 시작
 		if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
 		{
 			bag = (Double.parseDouble(stock_quantity_40kg)*40)/(double)unit;
@@ -76,7 +75,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 		else //수량이 실수일경우 (짜투리가 있을경우)
 		{
 			double total;
-			total = (Double.parseDouble(quantity[0])*Double.parseDouble(stockVO.getStock_unit())+Double.parseDouble(quantity[1]));//총kg
+			total = (Double.parseDouble(quantity[0])*(double)unit)+Double.parseDouble(quantity[1]);//총kg
 			bag = total/(double)unit;
 			bag = Math.ceil(bag);
 		}
@@ -155,12 +154,12 @@ public class StockControllerImpl extends BaseController implements StockControll
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 		
+		//단량별 포대 개수 계산 시작
 		String stock_quantity_40kg = stockVO.getStock_quantity_40kg();
 		String[] quantity = stock_quantity_40kg.split("."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
 		int unit = Integer.parseInt(stockVO.getStock_unit());
 		double bag; //단량별 포대 개수
 		
-		//단량별 포대 개수 계산 시작
 		if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
 		{
 			bag = (Double.parseDouble(stock_quantity_40kg)*40)/(double)unit;
@@ -169,7 +168,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 		else //수량이 실수일경우 (짜투리가 있을경우)
 		{
 			double total;
-			total = (Double.parseDouble(quantity[0])*Double.parseDouble(stockVO.getStock_unit())+Double.parseDouble(quantity[1]));//총kg
+			total = (Double.parseDouble(quantity[0])*(double)unit)+Double.parseDouble(quantity[1]);//총kg
 			bag = total/(double)unit;
 			bag = Math.ceil(bag);
 		}
@@ -221,17 +220,4 @@ public class StockControllerImpl extends BaseController implements StockControll
 		resEntity = new ResponseEntity<String>(message, responseHeaders, HttpStatus.OK);
 		return resEntity;
 	}
-
-	@Override
-	public int yearToStringTwoNum() {
-		Calendar cal = Calendar.getInstance();
-		int intYear = cal.get(Calendar.YEAR);
-		String stringYear = Integer.toString(intYear);
-		stringYear = stringYear.substring(2);
-		intYear = Integer.parseInt(stringYear);
-		return intYear;
-	}
-	
-	
-
 }

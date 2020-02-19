@@ -54,6 +54,7 @@
 	  </mvc:interceptor>
 	  <mvc:interceptor>
 	  	<mvc:mapping path="/warehouse/*.do"/>
+	  	<mvc:mapping path="/history/*.do"/>
 	  	<mvc:mapping path="/member/updateMember.do"/>
 	  	<mvc:mapping path="/mypage/*.do"/>
 	  	<mvc:mapping path="/stock/*.do"/>

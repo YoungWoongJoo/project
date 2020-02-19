@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.history">
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="historyResult" type="HistoryVO">
+		<result property="history_seq_num" column="history_seq_num"/>		
+		<result property="stock_seq_num" column="stock_seq_num"/>		
+		<result property="warehouse_name" column="warehouse_name"/>		
+		<result property="history_date" column="history_date"/>		
+		<result property="stock_year" column="stock_year"/>		
+		<result property="stock_sort1" column="stock_sort1"/>		
+		<result property="stock_sort2" column="stock_sort2"/>		
+		<result property="stock_unit" column="stock_unit"/>		
+		<result property="history_sort1" column="history_sort1"/>		
+		<result property="history_sort2" column="history_sort2"/>		
+		<result property="stock_prev" column="stock_prev"/>		
+		<result property="history_quantity" column="history_quantity"/>		
+		<result property="stock_present" column="stock_present"/>		
+	</resultMap>
+	
+	<resultMap id="stockResult" type="StockVO">
+		<result property="stock_seq_num" column="stock_seq_num"/>
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="stock_year" column="stock_year" />
+		<result property="stock_sort1" column="stock_sort1" />
+		<result property="stock_sort2" column="stock_sort2" />
+		<result property="stock_unit" column="stock_unit" />
+		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
+		<result property="stock_quantity_bag" column="stock_quantity_bag" />
+		<result property="stock_state" column="stock_state" />
+	</resultMap>
+		
+	<select id="selectStock" parameterType="historyVO" resultMap="stockResult">
+		<![CDATA[
+		select * from t_stock 
+								where warehouse_name = #{warehouse_name}
+								and	stock_year = #{stock_year}
+								and stock_sort1 = #{stock_sort1}
+								and stock_sort2 = #{stock_sort2}
+								and stock_unit = #{stock_unit}
+		]]>
+	</select>
+	
+	<insert id="insertNewStock" parameterType="historyVO">
+		<selectKey resultType="int" keyProperty="stock_seq_num" order="AFTER">
+			select stock_seq_num.currval from dual
+		</selectKey>
+	<![CDATA[
+		insert into t_stock(stock_seq_num,
+							warehouse_name,
+							stock_year,
+							stock_sort1,
+							stock_sort2,
+							stock_unit,
+							stock_quantity_40kg,
+							stock_quantity_bag)
+					values(stock_seq_num.nextval,
+							#{warehouse_name},
+							#{stock_year},
+							#{stock_sort1},
+							#{stock_sort2},
+							#{stock_unit},
+							'0',
+							'0')
+	]]>							
+		
+	</insert>
+	
+	<update id="updateStock" parameterType="stockVO">
+	<![CDATA[
+		update t_stock set 		stock_quantity_40kg = #{stock_quantity_40kg},
+								stock_quantity_bag = #{stock_quantity_bag},
+								stock_state = 'disable'
+					where stock_seq_num = #{stock_seq_num}
+	]]>
+	</update>
+	
+	<insert id="insertNewHistory" parameterType="historyVO">
+		<selectKey resultType="int" keyProperty="history_seq_num" order="BEFORE">
+			select history_seq_num.nextval from dual
+		</selectKey>
+		<![CDATA[
+		insert into t_history(history_seq_num,
+							stock_seq_num,
+							warehouse_name,
+							history_date,
+							stock_year,
+							stock_sort1,
+							stock_sort2,
+							stock_unit,
+							history_sort1,
+							history_sort2,
+							stock_prev,
+							history_quantity,
+							stock_present)
+					values(#{history_seq_num},
+							#{stock_seq_num},
+							#{warehouse_name},
+							#{history_date},
+							#{stock_year},
+							#{stock_sort1},
+							#{stock_sort2},
+							#{stock_unit},
+							#{history_sort1},
+							#{history_sort2},
+							#{stock_prev},
+							#{history_quantity},
+							#{stock_present})
+		]]>
+	</insert>
+	
+	<select id="selectList" resultMap="historyResult" parameterType="historyVO">
+
+	</select>
+	
+</mapper>
