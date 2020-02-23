@@ -45,4 +45,9 @@ public class StockServiceImpl implements StockService {
 		return stockVO;
 	}
 
+	@Override
+	public List<String> keywordSearch(String keyword) throws Exception {
+		return stockDao.keywordSearch(keyword);
+	}
+
 }

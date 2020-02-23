@@ -104,6 +104,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         name="warehouse_owner"
         id="warehouse_owner"
         required
+        autocomplete="off"
       /><br />
       코드번호 :
       <input
@@ -111,6 +112,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         name="warehouse_code"
         id="warehouse_code"
         required
+        autocomplete="off"
       /><br />
       지역구분 :
       <input

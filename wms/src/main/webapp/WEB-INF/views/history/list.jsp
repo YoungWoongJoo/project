@@ -9,7 +9,17 @@
 <script type="text/javascript">
 	function fn_getList(){
 		var warehouse_name = $("#select_wh").val();
+		if(warehouse_name == null)
+		{
+			alert("창고를 선택해주세요.");
+			return;
+		}
 		var history_date = $("#input_date").val();
+		if(history_date == '')
+		{
+			alert("날짜를 선택해주세요.");
+			return;
+		}
 		$.ajax({
 			type : "post",
 				async : "true",
@@ -17,6 +27,12 @@
 				dataType : "Text",
 				data : {warehouse_name : warehouse_name, history_date : history_date},
 				success: function(data, textStatus) {
+					if (data == "") {
+						alert("에러가 발생했습니다. 다시 시도해주세요.");
+						location.reload();
+						return;
+					}
+					$("#history_table").empty();
 					var historyVO = JSON.parse(data);
 					var str = '<thead>'
 							+ '<th>창고</th>'
@@ -36,7 +52,7 @@
 								+ '<td>'+historyVO[i].warehouse_name+'</td>'
 								+ '<td>'+historyVO[i].history_date+'</td>'
 								+ '<td>'+historyVO[i].stock_year+'</td>'
-								+ '<td>'+historyVO[i].stock_sort2+stockVO[i].stock_sort1+'</td>'
+								+ '<td>'+historyVO[i].stock_sort2+historyVO[i].stock_sort1+'</td>'
 								+ '<td>'+historyVO[i].stock_unit+'</td>'
 								+ '<td>'+historyVO[i].history_sort1+'</td>'
 								+ '<td>'+historyVO[i].history_sort2+'</td>'
@@ -73,7 +89,7 @@
 		                <option>${warehouse.warehouse_name}</option>
 		            </c:forEach>
 				</select>&nbsp;
-			날짜 : <input id="input_date" type="month" name="history_date">&nbsp;
+			날짜 : <input id="input_date" type="month" name="history_date" required>&nbsp;
 			<input type="button" value="조회" onclick="fn_getList()">
 			<br>
 		    <p></p>

@@ -63,13 +63,13 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       }
 
       function fn_submit() {
-    	var id = $("#member_id").val();
-    	var pw = $("#member_pw").val();
-    	var email = $("#member_email").val();
-    	if(!id||!pw||!email){
-    		alert("모든 항목을 입력해주세요.");
-    		return;
-    	}
+        var id = $("#member_id").val();
+        var pw = $("#member_pw").val();
+        var email = $("#member_email").val();
+        if (!id || !pw || !email) {
+          alert("모든 항목을 입력해주세요.");
+          return;
+        }
         if (loginCheck != "true") {
           alert("ID중복체크를 해주세요.");
           return;
@@ -93,7 +93,13 @@ uri="http://java.sun.com/jsp/jstl/core"%>
   <body>
     <form id="frm_member">
       <p>
-        아이디 : <input name="_member_id" id="_member_id" type="text" />
+        아이디 :
+        <input
+          name="_member_id"
+          id="_member_id"
+          type="text"
+          autocomplete="off"
+        />
         <input type="hidden" name="member_id" id="member_id" />
         <input
           type="button"
@@ -122,7 +128,13 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         >
       </p>
       <p>
-        이메일 : <input type="email" name="member_email" id="member_email" />
+        이메일 :
+        <input
+          type="email"
+          name="member_email"
+          id="member_email"
+          autocomplete="off"
+        />
       </p>
       <p>
         <input type="button" value="가입하기" onclick="fn_submit()" />

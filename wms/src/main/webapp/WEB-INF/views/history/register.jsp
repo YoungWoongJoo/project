@@ -8,6 +8,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script>
       $(document).ready(function() {
+        var loopSearch = true;
         var warehouse_name = "${warehouse_name}";
         if (warehouse_name != "" && warehouse_name != null) {
           $("#select_wh").val(warehouse_name);
@@ -17,9 +18,11 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           var text = "";
           $("#sort_detail").empty();
           if (this.value == "현미") {
-            text = "원산지 : <input type='text' name='stock_sort2' required>";
+            text =
+              "원산지 : <input type='text' id='stock_sort2' name='stock_sort2' autocomplete='off' required>";
           } else {
-            text = "품종 : <input type='text' name='stock_sort2' required>";
+            text =
+              "품종 : <input type='text' id='stock_sort2' name='stock_sort2' autocomplete='off' required>";
           }
           $("#sort_detail").append(text);
         });
@@ -51,7 +54,71 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           }
           $("#history_detail").append(text);
         });
+
+        $(document).on("keyup", "#stock_sort2", function() {
+          if (loopSearch == false) return;
+          var value = this.value;
+          $.ajax({
+            type: "post",
+            async: true, //false인 경우 동기식으로 처리한다.
+            url: "${contextPath}/stock/keywordSearch.do",
+            dataType: "Text",
+            data: { keyword: value },
+            success: function(data, textStatus) {
+              if (data != "") {
+                var keyword = JSON.parse(data);
+                displayResult(keyword);
+              }
+            },
+            error: function(data, textStatus) {
+              alert("에러가 발생했습니다." + data);
+            },
+            complete: function(data, textStatus) {
+              //alert("작업을완료 했습니다");
+            }
+          }); //end ajax
+        });
+
+        function displayResult(keyword) {
+          var count = keyword.length;
+          if (count > 0) {
+            var html = "";
+            for (var i in keyword) {
+              html +=
+                "<a href=\"javascript:select('" +
+                keyword[i] +
+                "')\">" +
+                keyword[i] +
+                "</a><br/>";
+            }
+            var listView = document.getElementById("suggestList");
+            listView.innerHTML = html;
+            show("suggest");
+          } else {
+            hide("suggest");
+          }
+        }
       });
+
+      function select(selectedKeyword) {
+        $("#stock_sort2").val(selectedKeyword);
+        loopSearch = false;
+        hide("suggest");
+      }
+
+      function show(elementId) {
+        var element = document.getElementById(elementId);
+        if (element) {
+          element.style.display = "block";
+        }
+      }
+
+      function hide(elementId) {
+        var element = document.getElementById(elementId);
+        if (element) {
+          element.style.display = "none";
+        }
+      }
     </script>
     <title>재고 관리</title>
   </head>
@@ -83,7 +150,9 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       포함)&nbsp; <input type="radio" name="stock_sort1" value="벼" />벼<br />
       <div id="sort_detail">
         원산지/품종 : 곡종 선택
-        <input type="hidden" required /><br />
+      </div>
+      <div id="suggest">
+        <div id="suggestList"></div>
       </div>
       단량 :
       <select name="stock_unit" required>
@@ -105,9 +174,9 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       <input type="radio" name="history_sort1" value="이적" />이적<br />
       <div id="history_detail">
         하역 구분 : 입출고구분 선택
-        <input type="hidden" required /><br />
       </div>
-      수량 : <input type="text" name="history_quantity" required />
+      수량 :
+      <input type="text" name="history_quantity" required autocomplete="off" />
       <p>
         <input type="submit" value="등록하기" />
         <input type="reset" value="취소" />

@@ -23,7 +23,6 @@ public class HistoryServiceImpl implements HistoryService {
 
 	@Override
 	public List<HistoryVO> selectList(HistoryVO historyVO) throws Exception {
-		// TODO Auto-generated method stub
 		return historyDao.selectList(historyVO);
 	}
 

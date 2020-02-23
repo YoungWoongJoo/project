@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycom.warehouse.common.Controller.BaseController;
@@ -105,10 +106,9 @@ public class HistoryControllerImpl extends BaseController implements HistoryCont
 
 	@Override
 	@RequestMapping(value="/getList.do")
-	public ResponseEntity<List<HistoryVO>> getList(HistoryVO historyVO, HttpServletRequest request,
+	public @ResponseBody List<HistoryVO> getList(HistoryVO historyVO, HttpServletRequest request,
 			HttpServletResponse resoponse) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return historyService.selectList(historyVO);
 	}
 
 }

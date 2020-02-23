@@ -42,4 +42,9 @@ public class StockDaoImpl implements StockDao {
 		return stockVO;
 	}
 
+	@Override
+	public List<String> keywordSearch(String keyword) throws DataAccessException {
+		return sqlSession.selectList("mapper.stock.selectKeywordSearch", keyword);
+	}
+
 }

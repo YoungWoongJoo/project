@@ -40,21 +40,50 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       method="POST"
       action="${contextPath}/history/addNewHistory.do"
     >
-      <input type="hidden" name="warehouse_name" value="${historyVO.warehouse_name}">
-      <input type="hidden" name="history_date" value="${historyVO.history_date}">
-      <input type="hidden" name="stock_year" value="${historyVO.stock_year}">
-      <input type="hidden" name="stock_sort1" value="${historyVO.stock_sort1}">
-      <input type="hidden" name="stock_sort2" value="${historyVO.stock_sort2}">
-      <input type="hidden" name="stock_unit" value="${historyVO.stock_unit}">
-      <input type="hidden" name="history_sort1" value="${historyVO.history_sort1}">
-      <input type="hidden" name="history_sort2" value="${historyVO.history_sort2}">
-      <input type="hidden" name="history_quantity" value="${historyVO.history_quantity}">
+      <input
+        type="hidden"
+        name="warehouse_name"
+        value="${historyVO.warehouse_name}"
+      />
+      <input
+        type="hidden"
+        name="history_date"
+        value="${historyVO.history_date}"
+      />
+      <input type="hidden" name="stock_year" value="${historyVO.stock_year}" />
+      <input
+        type="hidden"
+        name="stock_sort1"
+        value="${historyVO.stock_sort1}"
+      />
+      <input
+        type="hidden"
+        name="stock_sort2"
+        value="${historyVO.stock_sort2}"
+      />
+      <input type="hidden" name="stock_unit" value="${historyVO.stock_unit}" />
+      <input
+        type="hidden"
+        name="history_sort1"
+        value="${historyVO.history_sort1}"
+      />
+      <input
+        type="hidden"
+        name="history_sort2"
+        value="${historyVO.history_sort2}"
+      />
+      <input
+        type="hidden"
+        name="history_quantity"
+        value="${historyVO.history_quantity}"
+      />
       <p>
-        위의 내용을 확인하시고 관리 내용이 맞으면 아래의 "등록하기" 버튼을 눌러 진행해주세요.<br>
-        다른 부분이 있으면 "취소" 버튼을 눌러 이전 페이지로 돌아가 수정해주세요.<br>
-        관리 내용은 한번 추가되면 삭제나 수정을 할 수 없습니다. 정확히 확인해주세요.<p></p>
+        위의 내용을 확인하시고 관리 내용이 맞으면 아래의 "등록하기" 버튼을 눌러
+        진행해주세요.<br />
+        다른 부분이 있으면 "취소" 버튼을 눌러 이전 페이지로 돌아가
+        수정해주세요.<br />
         <input type="submit" value="등록하기" />
-        <input type="button" value="취소" onclick="history.back()"/>
+        <input type="button" value="취소" onclick="history.back()" />
       </p>
     </form>
   </body>

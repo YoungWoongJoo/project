@@ -42,10 +42,10 @@
 		<c:otherwise>
 			<form id=loginForm method="post" action="${contextPath}/member/login.do">
 				<p>
-					<input name="member_id" type="text" placeholder="아이디 입력" autofocus>
+					<input name="member_id" type="text" placeholder="아이디 입력" autofocus autocomplete="off">
 				</p>
 				<p>
-					<input name="member_pw" type="password" placeholder="비밀번호 입력">
+					<input name="member_pw" type="password" placeholder="비밀번호 입력" autocomplete="off">
 				</p>
 				<p>
 					<input type="submit" value="로그인"> 

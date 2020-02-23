@@ -10,7 +10,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<script src="${contextPath}/resources/jquery/jquery-1.6.2.min.js" type="text/javascript"></script>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 </head>
 <body>

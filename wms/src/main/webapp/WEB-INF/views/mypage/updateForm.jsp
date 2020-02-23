@@ -58,7 +58,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           value="${memberVO.member_id}"
           disabled
         />
-        <input type="hidden" name="member_id" value="${memberVO.member_id }">
+        <input type="hidden" name="member_id" value="${memberVO.member_id }" />
       </p>
       <p>
         비밀번호 : <input type="password" id="member_pw" name="member_pw" />
@@ -86,6 +86,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           name="member_email"
           id="member_email"
           value="${memberVO.member_email}"
+          autocomplete="off"
         />
       </p>
       <p>

@@ -113,7 +113,12 @@
 	</insert>
 	
 	<select id="selectList" resultMap="historyResult" parameterType="historyVO">
-
+	<![CDATA[
+		select * from t_history 
+								where history_date like #{history_date} || '%'
+								and warehouse_name = #{warehouse_name}
+								order by history_date
+	]]>
 	</select>
 	
 </mapper>

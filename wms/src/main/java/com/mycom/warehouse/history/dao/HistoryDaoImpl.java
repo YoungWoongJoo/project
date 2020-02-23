@@ -45,6 +45,18 @@ public class HistoryDaoImpl implements HistoryDao {
 			}
 			prev_quantity = historyVO.getStock_prev();
 			present_quantity = Double.parseDouble(prev_quantity) + Double.parseDouble(historyVO.getHistory_quantity());
+			quantity = present_quantity.toString().split(".");
+			if(quantity.length>1)
+			{
+				if(quantity[1].length()==1&&Integer.parseInt(quantity[1])>=4)
+				{
+					present_quantity += 0.6;
+				}
+				else if(quantity[1].length()==2&&Integer.parseInt(quantity[1])>=40)
+				{
+					present_quantity += 0.6;
+				}
+			}
 			historyVO.setStock_present(present_quantity.toString());
 			stockVO.setStock_quantity_40kg(present_quantity.toString());
 			
@@ -86,6 +98,18 @@ public class HistoryDaoImpl implements HistoryDao {
 			{
 				msg = "입력하신 출고량이 이월량보다 큽니다. 다시 시도해주세요.";
 				break;
+			}
+			quantity = present_quantity.toString().split(".");
+			if(quantity.length>1)
+			{
+				if(quantity[1].length()==1&&Integer.parseInt(quantity[1])>=4)
+				{
+					present_quantity -= 0.6;
+				}
+				else if(quantity[1].length()==2&&Integer.parseInt(quantity[1])>=40)
+				{
+					present_quantity -= 0.6;
+				}
 			}
 			historyVO.setStock_present(present_quantity.toString());
 			stockVO.setStock_quantity_40kg(present_quantity.toString());

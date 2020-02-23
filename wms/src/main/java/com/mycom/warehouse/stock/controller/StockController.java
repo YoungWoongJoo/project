@@ -20,6 +20,7 @@ public interface StockController {
 	public ModelAndView list(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ModelAndView updateForm(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<String> updateStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;
-	public ResponseEntity<String> deleteStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;	
+	public ResponseEntity<String> deleteStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public List<String> keywordSearch(@RequestParam("keyword") String keyword, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public int yearToStringTwoNum();
 }

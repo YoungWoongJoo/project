@@ -24,12 +24,12 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           str =
             "원산지 : <input type='text' name='stock_sort2' value='" +
             stock_sort2 +
-            "' required>";
+            "' required autocomplete='off'>";
         } else {
           str =
             "품종 : <input type='text' name='stock_sort2' value='" +
             stock_sort2 +
-            "' required>";
+            "' required autocomplete='off'>";
         }
         $("#sort_detail").append(str);
 
@@ -37,9 +37,11 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           var text = "";
           $("#sort_detail").empty();
           if (this.value == "현미") {
-            text = "원산지 : <input type='text' name='stock_sort2' required>";
+            text =
+              "원산지 : <input type='text' name='stock_sort2' autocomplete='off' required>";
           } else {
-            text = "품종 : <input type='text' name='stock_sort2' required>";
+            text =
+              "품종 : <input type='text' name='stock_sort2' autocomplete='off' required>";
           }
           $("#sort_detail").append(text);
         });
@@ -89,6 +91,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         id="stock_quantity_40kg"
         name="stock_quantity_40kg"
         required
+        autocomplete="off"
       />
       <p>
         <input type="submit" value="등록하기" />

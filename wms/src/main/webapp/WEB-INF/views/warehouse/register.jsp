@@ -34,13 +34,19 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     >
       <h2 id="frm_title">창고 등록하기</h2>
       창고명 :
-      <input type="text" name="warehouse_name" required /><br />
+      <input
+        type="text"
+        name="warehouse_name"
+        required
+        autocomplete="off"
+      /><br />
       창고주명 :
       <input
         type="text"
         name="warehouse_owner"
         id="warehouse_owner"
         required
+        autocomplete="off"
       /><br />
       코드번호 :
       <input
@@ -48,6 +54,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         name="warehouse_code"
         id="warehouse_code"
         required
+        autocomplete="off"
       /><br />
       지역구분 :
       <input

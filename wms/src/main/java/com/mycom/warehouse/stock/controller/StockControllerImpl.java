@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.mycom.warehouse.common.Controller.BaseController;
@@ -219,5 +220,18 @@ public class StockControllerImpl extends BaseController implements StockControll
 		
 		resEntity = new ResponseEntity<String>(message, responseHeaders, HttpStatus.OK);
 		return resEntity;
+	}
+
+	@Override
+	@ResponseBody
+	@RequestMapping(value="/keywordSearch.do")
+	public List<String> keywordSearch(@RequestParam("keyword") String keyword, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		response.setContentType("text/html;charset=utf-8");
+		response.setCharacterEncoding("utf-8");
+		if(keyword == null || keyword.equals(""))
+		   return null ;
+		List<String> kewordList = stockService.keywordSearch(keyword);
+		return kewordList;
 	}
 }

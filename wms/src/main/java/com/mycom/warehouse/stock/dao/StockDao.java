@@ -12,4 +12,5 @@ public interface StockDao {
 	public void updateStock(StockVO stockVO) throws DataAccessException;
 	public void deleteStock(StockVO stockVO) throws DataAccessException;
 	public StockVO searchStock(StockVO stockVO) throws DataAccessException;
+	public List<String> keywordSearch(String keyword) throws DataAccessException;
 }
