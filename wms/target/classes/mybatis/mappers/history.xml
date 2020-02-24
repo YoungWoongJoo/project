@@ -19,6 +19,7 @@
 		<result property="stock_prev" column="stock_prev"/>		
 		<result property="history_quantity" column="history_quantity"/>		
 		<result property="stock_present" column="stock_present"/>		
+		<result property="history_state" column="history_state"/>		
 	</resultMap>
 	
 	<resultMap id="stockResult" type="StockVO">
@@ -120,5 +121,13 @@
 								order by history_date
 	]]>
 	</select>
+	
+	<select id="selectHistory" resultMap="historyResult" parameterType="historyVO">
+		select * from t_history where history_seq_num = #{history_seq_num}
+	</select>
+	
+	<delete id="deleteHistory" parameterType="historyVO">
+		delete from t_history where history_seq_num = #{history_seq_num}
+	</delete>
 	
 </mapper>

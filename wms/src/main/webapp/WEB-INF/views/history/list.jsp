@@ -45,10 +45,12 @@
 							+ '<th>이월량</th>'
 							+ '<th>입출고량</th>'
 							+ '<th>잔량</th>'
+							+ '<th>삭제</th>'
 							+ '</thead>';
 					if (historyVO.length != 0) {
 						$.each(historyVO,function(i){
 							str += '<tr>'
+								+ "<input type='hidden' name='history_seq_num' value="+historyVO[i].history_seq_num+">"
 								+ '<td>'+historyVO[i].warehouse_name+'</td>'
 								+ '<td>'+historyVO[i].history_date+'</td>'
 								+ '<td>'+historyVO[i].stock_year+'</td>'
@@ -58,8 +60,15 @@
 								+ '<td>'+historyVO[i].history_sort2+'</td>'
 								+ '<td>'+historyVO[i].stock_prev+'</td>'
 								+ '<td>'+historyVO[i].history_quantity+'</td>'
-								+ '<td>'+historyVO[i].stock_present+'</td>'
-								+ '</tr>';
+								+ '<td>'+historyVO[i].stock_present+'</td><td>';
+								if(historyVO[i].history_state == 'enable')
+							{
+								str += "<input type='button' id='delete_history' value='삭제' onclick='fn_delete(this)'>";
+							}
+							else{
+								str += "불가";
+							}
+							str	+= '</td></tr>';
 						});
 					} else {
 						str += '<tr><td colspan="10">선택된 창고에 관리 이력이 없습니다.</td></tr>';
@@ -73,6 +82,17 @@
 					//alert("작업을완료 했습니다");
 				}
 		});
+	}
+
+	function fn_delete(obj){
+		var tr = $(obj).parent().parent();
+		var form = $("<form></form>");
+		var history_seq_num = $("<input type='hidden' name='history_seq_num' value="+tr.children().eq(0).val()+">");
+		form.append(history_seq_num);
+		form.attr("method", 'post');
+		form.attr("action", '${contextPath}/history/delete.do');
+		form.appendTo('body');
+		form.submit();
 	}
 
 </script>

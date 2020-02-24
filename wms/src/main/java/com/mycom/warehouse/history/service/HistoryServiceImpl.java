@@ -26,4 +26,9 @@ public class HistoryServiceImpl implements HistoryService {
 		return historyDao.selectList(historyVO);
 	}
 
+	@Override
+	public void delete(HistoryVO historyVO) throws Exception {
+		historyDao.delete(historyVO);
+	}
+
 }

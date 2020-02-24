@@ -7,4 +7,5 @@ import com.mycom.warehouse.history.vo.HistoryVO;
 public interface HistoryService {
 	public String insert(HistoryVO historyVO) throws Exception;
 	public List<HistoryVO> selectList(HistoryVO historyVO) throws Exception;
+	public void delete(HistoryVO historyVO) throws Exception;
 }

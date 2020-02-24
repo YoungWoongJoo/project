@@ -111,4 +111,33 @@ public class HistoryControllerImpl extends BaseController implements HistoryCont
 		return historyService.selectList(historyVO);
 	}
 
+	@Override
+	@RequestMapping(value="/delete.do")
+	public ResponseEntity<String> deleteHistory(HistoryVO historyVO, HttpServletRequest request,
+			HttpServletResponse resoponse) throws Exception {
+		String msg = null;
+		ResponseEntity<String> res = null;
+		HttpHeaders header = new HttpHeaders();
+		header.add("Content-Type", "text/html; charset=utf-8"); 
+		
+		try {
+			historyService.delete(historyVO);
+			msg  = "<script>";
+			msg += "alert('재고 관리 내역을 삭제했습니다. 재고 관리 내역 창으로 이동합니다.');";
+			msg += "location.href='"+request.getContextPath()+"/history/list.do'";
+			msg += " </script>";
+		}
+		catch(Exception e) {
+			msg  = "<script>";
+			msg +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
+			msg += "history.back();";
+			msg += " </script>";
+			e.printStackTrace();
+		}
+		
+		res = new ResponseEntity<String>(msg, header, HttpStatus.OK);
+		
+		return res;
+	}
+
 }

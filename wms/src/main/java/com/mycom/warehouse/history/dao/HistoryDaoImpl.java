@@ -1,5 +1,6 @@
 package com.mycom.warehouse.history.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -22,9 +23,10 @@ public class HistoryDaoImpl implements HistoryDao {
 		stockVO = sqlSession.selectOne("mapper.history.selectStock", historyVO);//재고검색
 		String history_sort = historyVO.getHistory_sort1();
 		String prev_quantity;
-		Double present_quantity;
+		String present_quantity;
 		String stock_quantity_40kg;
 		String[] quantity;
+		BigDecimal num1, num2;
 		int unit;
 		double bag;
 		String msg;
@@ -44,25 +46,31 @@ public class HistoryDaoImpl implements HistoryDao {
 				historyVO.setStock_seq_num(stockVO.getStock_seq_num());
 			}
 			prev_quantity = historyVO.getStock_prev();
-			present_quantity = Double.parseDouble(prev_quantity) + Double.parseDouble(historyVO.getHistory_quantity());
-			quantity = present_quantity.toString().split(".");
+			num1 = new BigDecimal(prev_quantity);
+			num2 = new BigDecimal(historyVO.getHistory_quantity());
+			present_quantity = num1.add(num2).toString();
+			quantity = present_quantity.split("\\.");
 			if(quantity.length>1)
 			{
 				if(quantity[1].length()==1&&Integer.parseInt(quantity[1])>=4)
 				{
-					present_quantity += 0.6;
+					num1 = new BigDecimal(present_quantity);
+					num2 = new BigDecimal("0.6");
+					present_quantity = num1.add(num2).toString();
 				}
 				else if(quantity[1].length()==2&&Integer.parseInt(quantity[1])>=40)
 				{
-					present_quantity += 0.6;
+					num1 = new BigDecimal(present_quantity);
+					num2 = new BigDecimal("0.6");
+					present_quantity = num1.add(num2).toString();
 				}
 			}
-			historyVO.setStock_present(present_quantity.toString());
-			stockVO.setStock_quantity_40kg(present_quantity.toString());
+			historyVO.setStock_present(present_quantity);
+			stockVO.setStock_quantity_40kg(present_quantity);
 			
 			//단량별 포대 개수 계산 시작
 			stock_quantity_40kg = stockVO.getStock_quantity_40kg();
-			quantity = stock_quantity_40kg.split("."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+			quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
 			unit = Integer.parseInt(historyVO.getStock_unit());
 			
 			if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
@@ -73,7 +81,7 @@ public class HistoryDaoImpl implements HistoryDao {
 			else //수량이 실수일경우 (짜투리가 있을경우)
 			{
 				double total;
-				total = (Double.parseDouble(quantity[0])*(double)unit)+Double.parseDouble(quantity[1]);//총kg
+				total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
 				bag = total/(double)unit;
 				bag = Math.ceil(bag);
 			}
@@ -93,30 +101,36 @@ public class HistoryDaoImpl implements HistoryDao {
 			historyVO.setStock_seq_num(stockVO.getStock_seq_num());
 			historyVO.setStock_prev(stockVO.getStock_quantity_40kg());
 			prev_quantity = historyVO.getStock_prev();
-			present_quantity = Double.parseDouble(prev_quantity) - Double.parseDouble(historyVO.getHistory_quantity());
-			if(present_quantity<0)
+			num1 = new BigDecimal(prev_quantity);
+			num2 = new BigDecimal(historyVO.getHistory_quantity());
+			present_quantity = num1.subtract(num2).toString();
+			if(Double.parseDouble(present_quantity)<0)
 			{
 				msg = "입력하신 출고량이 이월량보다 큽니다. 다시 시도해주세요.";
 				break;
 			}
-			quantity = present_quantity.toString().split(".");
+			quantity = present_quantity.split("\\.");
 			if(quantity.length>1)
 			{
 				if(quantity[1].length()==1&&Integer.parseInt(quantity[1])>=4)
 				{
-					present_quantity -= 0.6;
+					num1 = new BigDecimal(present_quantity);
+					num2 = new BigDecimal("0.6");
+					present_quantity = num1.subtract(num2).toString();
 				}
 				else if(quantity[1].length()==2&&Integer.parseInt(quantity[1])>=40)
 				{
-					present_quantity -= 0.6;
+					num1 = new BigDecimal(present_quantity);
+					num2 = new BigDecimal("0.6");
+					present_quantity = num1.subtract(num2).toString();
 				}
 			}
-			historyVO.setStock_present(present_quantity.toString());
-			stockVO.setStock_quantity_40kg(present_quantity.toString());
+			historyVO.setStock_present(present_quantity);
+			stockVO.setStock_quantity_40kg(present_quantity);
 			
 			//단량별 포대 개수 계산 시작
 			stock_quantity_40kg = stockVO.getStock_quantity_40kg();
-			quantity = stock_quantity_40kg.split("."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+			quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
 			unit = Integer.parseInt(historyVO.getStock_unit());
 			
 			if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
@@ -127,7 +141,7 @@ public class HistoryDaoImpl implements HistoryDao {
 			else //수량이 실수일경우 (짜투리가 있을경우)
 			{
 				double total;
-				total = (Double.parseDouble(quantity[0])*(double)unit)+Double.parseDouble(quantity[1]);//총kg
+				total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
 				bag = total/(double)unit;
 				bag = Math.ceil(bag);
 			}
@@ -162,6 +176,106 @@ public class HistoryDaoImpl implements HistoryDao {
 	@Override
 	public List<HistoryVO> selectList(HistoryVO historyVO) throws DataAccessException {
 		return sqlSession.selectList("mapper.history.selectList", historyVO);
+	}
+
+	@Override
+	public void delete(HistoryVO historyVO) throws DataAccessException {
+		historyVO = sqlSession.selectOne("mapper.history.selectHistory", historyVO);
+		stockVO.setStock_seq_num(historyVO.getStock_seq_num());
+		String history_sort = historyVO.getHistory_sort1();
+		BigDecimal num1,num2;
+		String stock_quantity_40kg;
+		String[] quantity;
+		int unit;
+		double bag;
+		switch(history_sort)
+		{
+		case "입고":
+			num2 = new BigDecimal(historyVO.getHistory_quantity());
+			num1 = new BigDecimal(historyVO.getStock_present());
+			stock_quantity_40kg = num1.subtract(num2).toString();
+			quantity = stock_quantity_40kg.split("\\.");
+			if(quantity.length>1)
+			{
+				if(quantity[1].length()==1&&Integer.parseInt(quantity[1])>=4)
+				{
+					num1 = new BigDecimal(stock_quantity_40kg);
+					num2 = new BigDecimal("0.6");
+					stock_quantity_40kg = num1.subtract(num2).toString();
+				}
+				else if(quantity[1].length()==2&&Integer.parseInt(quantity[1])>=40)
+				{
+					num1 = new BigDecimal(stock_quantity_40kg);
+					num2 = new BigDecimal("0.6");
+					stock_quantity_40kg = num1.subtract(num2).toString();
+				}
+			}
+			stockVO.setStock_quantity_40kg(stock_quantity_40kg);
+			//단량별 포대 개수 계산 시작
+			stock_quantity_40kg = stockVO.getStock_quantity_40kg();
+			quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+			unit = Integer.parseInt(historyVO.getStock_unit());
+			
+			if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
+			{
+				bag = (Double.parseDouble(stock_quantity_40kg)*40)/(double)unit;
+				bag = Math.ceil(bag);
+			}
+			else //수량이 실수일경우 (짜투리가 있을경우)
+			{
+				double total;
+				total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
+				bag = total/(double)unit;
+				bag = Math.ceil(bag);
+			}
+			stockVO.setStock_quantity_bag(Integer.toString((int)bag));
+			//단량별 포대 개수 계산 끝
+			sqlSession.update("mapper.history.updateStock", stockVO);
+			break;
+		case "출고":
+			num2 = new BigDecimal(historyVO.getHistory_quantity());
+			num1 = new BigDecimal(historyVO.getStock_present());
+			stock_quantity_40kg = num1.add(num2).toString();
+			quantity = stock_quantity_40kg.split("\\.");
+			if(quantity.length>1)
+			{
+				if(quantity[1].length()==1&&Integer.parseInt(quantity[1])>=4)
+				{
+					num1 = new BigDecimal(stock_quantity_40kg);
+					num2 = new BigDecimal("0.6");
+					stock_quantity_40kg = num1.add(num2).toString();
+				}
+				else if(quantity[1].length()==2&&Integer.parseInt(quantity[1])>=40)
+				{
+					num1 = new BigDecimal(stock_quantity_40kg);
+					num2 = new BigDecimal("0.6");
+					stock_quantity_40kg = num1.add(num2).toString();
+				}
+			}
+			stockVO.setStock_quantity_40kg(stock_quantity_40kg);
+			//단량별 포대 개수 계산 시작
+			stock_quantity_40kg = stockVO.getStock_quantity_40kg();
+			quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+			unit = Integer.parseInt(historyVO.getStock_unit());
+			
+			if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
+			{
+				bag = (Double.parseDouble(stock_quantity_40kg)*40)/(double)unit;
+				bag = Math.ceil(bag);
+			}
+			else //수량이 실수일경우 (짜투리가 있을경우)
+			{
+				double total;
+				total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
+				bag = total/(double)unit;
+				bag = Math.ceil(bag);
+			}
+			stockVO.setStock_quantity_bag(Integer.toString((int)bag));
+			//단량별 포대 개수 계산 끝
+			sqlSession.update("mapper.history.updateStock", stockVO);
+			break;
+		}
+		sqlSession.delete("mapper.history.deleteHistory", historyVO);
 	}
 
 }

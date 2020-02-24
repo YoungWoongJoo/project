@@ -17,4 +17,5 @@ public interface HistoryController {
 	public ModelAndView registerCheck(@ModelAttribute("historyVO")HistoryVO historyVO, HttpServletRequest request, HttpServletResponse resoponse) throws Exception;
 	public ResponseEntity<String> addNewHistory(@ModelAttribute("historyVO")HistoryVO historyVO, HttpServletRequest request, HttpServletResponse resoponse) throws Exception;
 	public List<HistoryVO> getList(@ModelAttribute("historyVO")HistoryVO historyVO, HttpServletRequest request, HttpServletResponse resoponse) throws Exception;
+	public ResponseEntity<String> deleteHistory(@ModelAttribute("historyVO")HistoryVO historyVO, HttpServletRequest request, HttpServletResponse resoponse) throws Exception;
 }

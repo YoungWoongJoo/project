@@ -17,6 +17,7 @@ public class HistoryVO {
 	private String stock_prev;
 	private String history_quantity;
 	private String stock_present;
+	private String history_state;
 	
 	public int getHistory_seq_num() {
 		return history_seq_num;
@@ -95,5 +96,11 @@ public class HistoryVO {
 	}
 	public void setStock_present(String stock_present) {
 		this.stock_present = stock_present;
+	}
+	public String getHistory_state() {
+		return history_state;
+	}
+	public void setHistory_state(String history_state) {
+		this.history_state = history_state;
 	}
 }

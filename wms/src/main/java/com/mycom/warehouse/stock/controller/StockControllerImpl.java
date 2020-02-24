@@ -64,7 +64,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 		
 		//단량별 포대 개수 계산 시작
 		String stock_quantity_40kg = stockVO.getStock_quantity_40kg();
-		String[] quantity = stock_quantity_40kg.split("."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+		String[] quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
 		int unit = Integer.parseInt(stockVO.getStock_unit());
 		double bag; //단량별 포대 개수
 		
@@ -76,7 +76,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 		else //수량이 실수일경우 (짜투리가 있을경우)
 		{
 			double total;
-			total = (Double.parseDouble(quantity[0])*(double)unit)+Double.parseDouble(quantity[1]);//총kg
+			total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
 			bag = total/(double)unit;
 			bag = Math.ceil(bag);
 		}
@@ -157,7 +157,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 		
 		//단량별 포대 개수 계산 시작
 		String stock_quantity_40kg = stockVO.getStock_quantity_40kg();
-		String[] quantity = stock_quantity_40kg.split("."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+		String[] quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
 		int unit = Integer.parseInt(stockVO.getStock_unit());
 		double bag; //단량별 포대 개수
 		
@@ -169,7 +169,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 		else //수량이 실수일경우 (짜투리가 있을경우)
 		{
 			double total;
-			total = (Double.parseDouble(quantity[0])*(double)unit)+Double.parseDouble(quantity[1]);//총kg
+			total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
 			bag = total/(double)unit;
 			bag = Math.ceil(bag);
 		}

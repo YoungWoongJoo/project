@@ -9,4 +9,5 @@ import com.mycom.warehouse.history.vo.HistoryVO;
 public interface HistoryDao {
 	public String insertNewHistory(HistoryVO historyVO) throws DataAccessException;
 	public List<HistoryVO> selectList(HistoryVO historyVO) throws DataAccessException;
+	public void delete(HistoryVO historyVO) throws DataAccessException;
 }
