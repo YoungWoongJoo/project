@@ -20,4 +20,7 @@
 	<definition name="*/*/*" extends="baseLayout">
 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" />
 	</definition>
+	<definition name="*/*/*/*" extends="baseLayout">
+		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}/{4}.jsp" />
+	</definition>
 </tiles-definitions>

@@ -19,8 +19,9 @@
 	<h1>시스템 설정</h1>
 	<ul>
 		<li><a href="#">요율 설정</a></li>
-		<li><a href="#">요율 확인</a></li>
-		<li><a href="#">시스템 설정</a></li>
+		<li><a href="#">요율 설정 확인</a></li>
+		<li><a href="${contextPath}/system/setting/register.do">시스템 설정</a></li>
+		<li><a href="${contextPath}/system/setting/list.do">시스템 설정 확인</a></li>
 	</ul>
 	<h1>마이페이지</h1>
 	<ul>

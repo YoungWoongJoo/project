@@ -33,7 +33,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         }
         $.ajax({
           type: "post",
-          async: false,
+          async: true,
           url: "${contextPath}/member/checkId.do",
           dataType: "Text",
           data: { id: member_id },

@@ -11,6 +11,7 @@
 		<result property="warehouse_code" column="warehouse_code" />
 		<result property="warehouse_region" column="warehouse_region" />
 		<result property="warehouse_rating" column="warehouse_rating" />
+		<result property="warehouse_region_name" column="warehouse_region_name" />
 		<result property="member_id" column="member_id" />
 	</resultMap>
 	
@@ -30,13 +31,15 @@
     							warehouse_owner, 
     							warehouse_code, 
     							warehouse_region, 
-    							warehouse_rating, 
+    							warehouse_rating,
+    							warehouse_region_name, 
     							member_id) 
     					 values(#{warehouse_name}, 
     							#{warehouse_owner}, 
     							#{warehouse_code},
     							#{warehouse_region},
     							#{warehouse_rating},
+    							#{warehouse_region_name},
     							#{member_id})
    ]]>
 	</insert>
@@ -45,7 +48,8 @@
 		update t_warehouse set 	warehouse_owner = #{warehouse_owner},
 								warehouse_code = #{warehouse_code},
 								warehouse_region = #{warehouse_region},
-								warehouse_rating = #{warehouse_rating}
+								warehouse_rating = #{warehouse_rating},
+								warehouse_region_name = #{warehouse_region_name}
 					where warehouse_name = #{warehouse_name}
 	</update>
 	

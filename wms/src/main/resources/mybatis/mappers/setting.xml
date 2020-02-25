@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.setting">
+	<!-- 리절트 맵 정의 -->
+	<resultMap type="StorageRateVO" id="storageRateResult">
+		<result property="storage_rate_seq_num" column="storage_rate_seq_num"/>
+		<result property="warehouse_region" column="warehouse_region"/>
+		<result property="warehouse_rating" column="warehouse_rating"/>
+		<result property="white_rice_rate" column="white_rice_rate"/>
+		<result property="brown_rice_rate" column="brown_rice_rate"/>
+		<result property="rice_rate" column="rice_rate"/>
+	</resultMap>
+	
+	<resultMap type="CargoRateVO" id="cargoRateResult">
+		<result property="cargo_rate_seq_num" column="cargo_rate_seq_num"/>
+		<result property="wrap_sort" column="cargo_rate_seq_num"/>
+		<result property="load_rate" column="cargo_rate_seq_num"/>
+		<result property="unload_rate" column="cargo_rate_seq_num"/>
+		<result property="warehousing_rate" column="cargo_rate_seq_num"/>
+		<result property="release_rate" column="cargo_rate_seq_num"/>
+		<result property="purchase_warehousing_rate" column="cargo_rate_seq_num"/>
+		<result property="purchase_load_rate" column="cargo_rate_seq_num"/>
+		<result property="security_rate" column="cargo_rate_seq_num"/>
+		<result property="transfer_rate" column="cargo_rate_seq_num"/>
+		<result property="migration_20m_rate" column="cargo_rate_seq_num"/>
+		<result property="migration_50m_rate" column="cargo_rate_seq_num"/>
+		<result property="bag_purchase_rate" column="cargo_rate_seq_num"/>
+	</resultMap>
+	
+	<resultMap id="settingResult" type="SettingVO">
+		<result property="setting_region" column="setting_region" />
+		<result property="setting_chief_name" column="setting_chief_name" />
+		<result property="setting_manager_name" column="setting_manager_name" />
+		<result property="setting_officer_email" column="setting_officer_email" />
+	</resultMap>
+	
+	<insert id="addStorageRate" parameterType="storageRateVO">
+		<selectKey resultType="int" keyProperty="storage_rate_seq_num" order="BEFORE">
+			select storage_rate_seq_num.nextval from dual
+		</selectKey>
+		insert into t_storage_rate(storage_rate_seq_num,
+									warehouse_region,
+									warehouse_rating,
+									white_rice_rate,
+									brown_rice_rate,
+									rice_rate)
+							values(#{storage_rate_seq_num},
+									#{warehouse_region},
+									#{warehouse_rating},
+									#{white_rice_rate},
+									#{brown_rice_rate},
+									#{rice_rate})
+	</insert>
+	
+	<update id="updateStorageRate" parameterType="storageRateVO">
+		update t_storage_rate set 	warehouse_region = #{warehouse_region},
+									warehouse_rating = #{warehouse_rating},
+									white_rice_rate = #{white_rice_rate},
+									brown_rice_rate = #{brown_rice_rate},
+									rice_rate = #{rice_rate}
+					where storage_rate_seq_num = #{storage_rate_seq_num}
+	</update>
+	
+	<delete id="deleteStorageRate" parameterType="storageRateVO">
+		delete from t_storage_rate where storage_rate_seq_num = #{storage_rate_seq_num}
+	</delete>
+	
+	<insert id="addCargoRate" parameterType="cargoRateVO">
+		<selectKey resultType="int" keyProperty="cargo_rate_seq_num" order="BEFORE">
+			select cargo_rate_seq_num.nextval from dual
+		</selectKey>
+		insert into t_cargo_rate(cargo_rate_seq_num,
+									wrap_sort,
+									load_rate,
+									unload_rate,
+									warehousing_rate,
+									release_rate,
+									purchase_warehousing_rate,
+									purchase_load_rate,
+									security_rate,
+									transfer_rate,
+									migration_20m_rate,
+									migration_50m_rate,
+									bag_purchase_rate)
+							values(#{cargo_rate_seq_num},
+									#{wrap_sort},
+									#{load_rate},
+									#{unload_rate},
+									#{warehousing_rate},
+									#{release_rate},
+									#{purchase_warehousing_rate},
+									#{purchase_load_rate},
+									#{security_rate},
+									#{transfer_rate},
+									#{migration_20m_rate},
+									#{migration_50m_rate},
+									#{bag_purchase_rate})
+	</insert>
+	
+	<update id="updateCargoRate" parameterType="cargoRateVO">
+		update t_cargo_rate set 	wrap_sort = #{wrap_sort},
+									load_rate = #{load_rate},
+									unload_rate = #{unload_rate},
+									warehousing_rate = #{warehousing_rate},
+									release_rate = #{release_rate},
+									purchase_warehousing_rate = #{purchase_warehousing_rate},
+									purchase_load_rate = #{purchase_load_rate},
+									security_rate = #{security_rate},
+									transfer_rate = #{transfer_rate},
+									migration_20m_rate = #{migration_20m_rate},
+									migration_50m_rate = #{migration_50m_rate},
+									bag_purchase_rate = #{bag_purchase_rate}
+					where cargo_rate_seq_num = #{cargo_rate_seq_num}
+	</update>
+	
+	<delete id="deleteCargoRate" parameterType="cargoRateVO">
+		delete from t_cargo_rate where cargo_rate_seq_num = #{cargo_rate_seq_num}
+	</delete>
+	
+	<insert id="addSetting" parameterType="settingVO">
+		insert into t_setting(setting_region,
+									setting_chief_name,
+									setting_manager_name,
+									setting_officer_email)
+							values(#{setting_region},
+									#{setting_chief_name},
+									#{setting_manager_name},
+									#{setting_officer_email})
+	</insert>
+	
+	<update id="updateSetting" parameterType="settingVO">
+		update t_setting set 	setting_chief_name = #{setting_chief_name},
+									setting_manager_name = #{setting_manager_name},
+									setting_officer_email = #{setting_officer_email}
+					where setting_region = #{setting_region}
+	</update>
+	
+	<delete id="deleteSetting" parameterType="settingVO">
+		delete from t_setting where setting_region = #{setting_region}
+	</delete>
+	
+	<select id="selectStorageRateList" resultMap="storageRateResult">
+		select * from t_storage_rate order by storage_rate_seq_num
+	</select>
+	
+	<select id="selectCargoRateList" resultMap="cargoRateResult">
+		select * from t_cargo_rate order by cargo_rate_seq_num
+	</select>
+	
+	<select id="selectSettingList" resultMap="settingResult">
+		select * from t_setting order by setting_region
+	</select>
+	
+</mapper>

@@ -17,6 +17,13 @@ public abstract class BaseController  {
 		return mav;
 	}
 	
+	@RequestMapping(value="/*/*.do" ,method={RequestMethod.POST,RequestMethod.GET})
+	protected  ModelAndView viewForm2(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String viewName=(String)request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);
+		return mav;
+	}
+	
 	public int yearToStringTwoNum() {
 		Calendar cal = Calendar.getInstance();
 		int intYear = cal.get(Calendar.YEAR);
