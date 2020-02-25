@@ -78,20 +78,16 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         name="warehouse_rating"
         required
       />일반창고&nbsp;
-      <input
-        type="radio"
-        name="warehouse_rating"
-        value="저온창고"
-      />저온창고<br />
+      <input type="radio" name="warehouse_rating" value="저온" />저온창고<br />
       <div id="detail_view" style="display: none;">
         상세구분:
         <select id="detail_rating" required>
           <option selected disabled>선택</option>
-          <option value="일반/특급">특급</option>
-          <option value="일반/1급">1급</option>
-          <option value="일반/2급">2급</option>
-          <option value="일반/3급">3급</option>
-          <option value="일반/등외">등외</option>
+          <option value="특급">특급</option>
+          <option value="1급">1급</option>
+          <option value="2급">2급</option>
+          <option value="3급">3급</option>
+          <option value="등외">등외</option>
         </select>
       </div>
 
