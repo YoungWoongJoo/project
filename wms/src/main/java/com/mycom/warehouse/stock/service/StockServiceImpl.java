@@ -50,4 +50,9 @@ public class StockServiceImpl implements StockService {
 		return stockDao.keywordSearch(keyword);
 	}
 
+	@Override
+	public StockVO selectStock(StockVO stockVO) throws Exception {
+		return stockDao.selectStock(stockVO);
+	}
+
 }

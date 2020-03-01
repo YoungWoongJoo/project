@@ -23,6 +23,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         $("#warehouse_rating").val(value);
       });
     });
+
   </script>
   <title>창고 등록</title>
 </head>
@@ -62,7 +63,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     </div>
     소재지(시·군단위) : <input type="text" name="warehouse_region_name" required autocomplete="off">
     <p>
-      <input type="submit" id="btn_submit" value="등록하기" />
+      <input type="submit" id="btn_submit" value="등록하기"/>
       <input type="reset" value="취소" />
     </p>
   </form>

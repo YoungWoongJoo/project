@@ -14,4 +14,5 @@ public interface SystemDao {
 	public Map<String,Object> rateList() throws DataAccessException;
 	public List<SettingVO> settingList() throws DataAccessException;
 	public Object searchRate(Map<String,String> map) throws DataAccessException;
+	public Object selectSystemVO(Map<String,String> map, String sort) throws DataAccessException;
 }

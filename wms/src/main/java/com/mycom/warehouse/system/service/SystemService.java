@@ -12,4 +12,5 @@ public interface SystemService {
 	public Map<String,Object> rateList() throws Exception;
 	public List<SettingVO> settingList() throws Exception;
 	public Object searchRate(Map<String, String> map) throws Exception;
+	public Object selectSystemVO(Map<String, String> map, String sort) throws Exception;
 }

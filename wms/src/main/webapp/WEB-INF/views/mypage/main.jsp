@@ -64,12 +64,12 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     function fn_stock_register() {
       var checked = $("input:radio[id='radioName']").is(":checked");
       if (checked == true) {
-        var radio = $('$("#radioName"):checked');
+        var radio = $('input[name="radioName"]:checked');
         var tr = radio.parent().parent();
         var td = tr.children();
 
         var form = $("<form></form>");
-        var name = $("<input type='hidden' name='warehouse_name' value=" + td.eq(1).text() + ">");
+        var name = $("<input type='hidden' name='warehouse_name' value=" + td.eq(2).text() + ">");
 
         form.append(name);
         form.attr("method", 'POST');

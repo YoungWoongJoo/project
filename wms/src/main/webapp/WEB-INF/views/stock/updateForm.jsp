@@ -33,7 +33,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         }
         $("#sort_detail").append(str);
 
-        $("input[name='stock_sort1']").change(function() {
+        $("input[name='stock_sort1']").click(function() {
           var text = "";
           $("#sort_detail").empty();
           if (this.value == "현미") {

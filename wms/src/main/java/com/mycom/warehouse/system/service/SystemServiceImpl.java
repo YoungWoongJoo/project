@@ -48,4 +48,9 @@ public class SystemServiceImpl implements SystemService {
 		return systemDao.searchRate(map);
 	}
 
+	@Override
+	public Object selectSystemVO(Map<String, String> map, String sort) throws Exception {
+		return systemDao.selectSystemVO(map, sort);
+	}
+
 }

@@ -34,32 +34,51 @@ public class SystemControllerImpl extends BaseController implements SystemContro
 		String msg = null;
 		ResponseEntity<String> resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
-		String msgSort = null;
+		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+		String msgSort, msgStatus= null;
 		switch(sort)
 		{
 		case "setting":
 			msgSort = "시스템 설정 ";
+			msgStatus = map.get("setting_region")+"는 이미 시스템 설정에 등록되어 있습니다.";
+			break;
+		case "storageRate":
+			msgSort = "보관료 요율";
+			msgStatus = map.get("warehouse_region")+map.get("warehouse_rating")+" 창고의 보관료 요율은 이미 등록되어 있습니다.";
 			break;
 		default:
-			msgSort = "요율 설정 ";
-		}
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-		try {
-			systemService.add(map, sort);
-			msg  = "<script>";
-			msg +=" alert('"+msgSort+"등록을 완료했습니다. "+msgSort+"확인창으로 이동합니다.');";
-			if(sort.equals("setting"))
-				msg += "location.href='"+request.getContextPath()+"/system/setting/list.do';";
+			msgSort = "하역료 요율 ";
+			if(map.get("wrap_sort")=="톤백")
+				msgStatus = map.get("wrap_sort")+"의 하역료 요율은 이미 등록되어 있습니다.";
 			else
-				msg += "location.href='"+request.getContextPath()+"/system/rate/list.do';";
-			msg += " </script>";
+				msgStatus = map.get("wrap_sort")+"kg의 하역료 요율은 이미 등록되어 있습니다.";
 		}
-		catch(Exception e) {
+		if(systemService.selectSystemVO(map, sort)!=null)
+		{
 			msg  = "<script>";
-			msg +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
+			msg +=" alert('"+msgStatus+"');";
 			msg += " history.back();";
 			msg += " </script>";
-			e.printStackTrace();
+		}
+		else
+		{
+			try {
+				systemService.add(map, sort);
+				msg  = "<script>";
+				msg +=" alert('"+msgSort+"등록을 완료했습니다. "+msgSort+"확인창으로 이동합니다.');";
+				if(sort.equals("setting"))
+					msg += "location.href='"+request.getContextPath()+"/system/setting/list.do';";
+				else
+					msg += "location.href='"+request.getContextPath()+"/system/rate/list.do';";
+				msg += " </script>";
+			}
+			catch(Exception e) {
+				msg  = "<script>";
+				msg +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
+				msg += " history.back();";
+				msg += " </script>";
+				e.printStackTrace();
+			}
 		}
 		resEntity =new ResponseEntity<String>(msg, responseHeaders, HttpStatus.OK);
 		return resEntity;

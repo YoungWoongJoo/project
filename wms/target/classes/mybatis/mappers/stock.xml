@@ -19,7 +19,7 @@
 	
 	<select id="selectStockList" resultMap="stockResult" parameterType="String">
 		<![CDATA[
-		select * from t_stock where warehouse_name=#{warehouse_name} and stock_quantity_40kg!=0 order by stock_seq_num
+		select * from t_stock where warehouse_name=#{warehouse_name} and stock_quantity_40kg!=0 order by stock_year, stock_sort1, stock_sort2, stock_unit
 		]]>
 	</select>
 	
@@ -70,6 +70,14 @@
         where         
         stock_sort2 like '%'|| #{keyword} || '%'
 		]]>
+	</select>
+	
+	<select id="selectStock" resultMap="stockResult" parameterType="stockVO">
+		select * from t_stock where warehouse_name = #{warehouse_name} and
+									stock_year = #{stock_year} and
+									stock_sort1 = #{stock_sort1} and
+									stock_sort2 = #{stock_sort2} and
+									stock_unit = #{stock_unit}
 	</select>
 	
 </mapper>

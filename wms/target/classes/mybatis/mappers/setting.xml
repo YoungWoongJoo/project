@@ -162,4 +162,16 @@
 		select * from t_cargo_rate where to_char(cargo_rate_seq_num) = #{cargo_rate_seq_num}
 	</select>
 	
+	<select id="selectOnestorageRate" resultMap="storageRateResult" parameterType="java.util.Map">
+		select * from t_storage_rate where warehouse_region = #{warehouse_region} and warehouse_rating = #{warehouse_rating}
+	</select>
+	
+	<select id="selectOnecargoRate" resultMap="cargoRateResult" parameterType="java.util.Map">
+		select * from t_cargo_rate where wrap_sort = #{wrap_sort}
+	</select>
+	
+	<select id="selectOnesetting" resultMap="settingResult" parameterType="java.util.Map">
+		select * from t_setting where setting_region = #{setting_region}
+	</select>
+	
 </mapper>

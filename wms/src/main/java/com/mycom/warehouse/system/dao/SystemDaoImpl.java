@@ -62,4 +62,9 @@ public class SystemDaoImpl implements SystemDao {
 		}
 	}
 
+	@Override
+	public Object selectSystemVO(Map<String, String> map, String sort) throws DataAccessException {
+		return sqlSession.selectOne("mapper.setting.selectOne"+sort, map);
+	}
+
 }

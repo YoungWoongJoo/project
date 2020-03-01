@@ -62,42 +62,51 @@ public class StockControllerImpl extends BaseController implements StockControll
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 		
-		//단량별 포대 개수 계산 시작
-		String stock_quantity_40kg = stockVO.getStock_quantity_40kg();
-		String[] quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
-		int unit = Integer.parseInt(stockVO.getStock_unit());
-		double bag; //단량별 포대 개수
-		
-		if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
+		if(stockService.selectStock(stockVO)!=null)
 		{
-			bag = (Double.parseDouble(stock_quantity_40kg)*40)/(double)unit;
-			bag = Math.ceil(bag);
-		}
-		else //수량이 실수일경우 (짜투리가 있을경우)
-		{
-			double total;
-			total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
-			bag = total/(double)unit;
-			bag = Math.ceil(bag);
-		}
-		stockVO.setStock_quantity_bag(Integer.toString((int)bag));
-		//단량별 포대 개수 계산 끝
-		
-		try {
-			stockService.register(stockVO);
-		    message  = "<script>";
-		    message +=" alert('재고 등록을 마쳤습니다.재고확인창으로 이동합니다.');";
-		    message += " location.href='"+request.getContextPath()+"/stock/list.do';";
-		    message += " </script>";
-		    
-		}catch(Exception e) {
 			message  = "<script>";
-		    message +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
+		    message +=" alert('"+stockVO.getStock_year()+"년산 "+stockVO.getStock_unit()+"kg단량 "+stockVO.getStock_sort2()+stockVO.getStock_sort1()+"은(는) "+stockVO.getWarehouse_name()+"에 이미 등록된 재고입니다.');";
 		    message += "history.back();";
 		    message += " </script>";
-			e.printStackTrace();
 		}
-		
+		else
+		{
+			//단량별 포대 개수 계산 시작
+			String stock_quantity_40kg = stockVO.getStock_quantity_40kg();
+			String[] quantity = stock_quantity_40kg.split("\\."); //짜투리 확인 quantity[0]은 40kg포대개수, quantity[1]은 짜투리(kg)
+			int unit = Integer.parseInt(stockVO.getStock_unit());
+			double bag; //단량별 포대 개수
+			
+			if(quantity==null||quantity.length<2)//수량이 정수일 경우(짜투리가 없을경우)
+			{
+				bag = (Double.parseDouble(stock_quantity_40kg)*40)/(double)unit;
+				bag = Math.ceil(bag);
+			}
+			else //수량이 실수일경우 (짜투리가 있을경우)
+			{
+				double total;
+				total = (Double.parseDouble(quantity[0])*40)+Double.parseDouble(quantity[1]);//총kg
+				bag = total/(double)unit;
+				bag = Math.ceil(bag);
+			}
+			stockVO.setStock_quantity_bag(Integer.toString((int)bag));
+			//단량별 포대 개수 계산 끝
+			
+			try {
+				stockService.register(stockVO);
+			    message  = "<script>";
+			    message +=" alert('재고 등록을 마쳤습니다.재고확인창으로 이동합니다.');";
+			    message += " location.href='"+request.getContextPath()+"/stock/list.do';";
+			    message += " </script>";
+			    
+			}catch(Exception e) {
+				message  = "<script>";
+			    message +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
+			    message += "history.back();";
+			    message += " </script>";
+				e.printStackTrace();
+			}
+		}
 		resEntity = new ResponseEntity<String>(message, responseHeaders, HttpStatus.OK);
 		return resEntity;
 	}
@@ -233,5 +242,12 @@ public class StockControllerImpl extends BaseController implements StockControll
 		   return null ;
 		List<String> kewordList = stockService.keywordSearch(keyword);
 		return kewordList;
+	}
+
+	@Override
+	@RequestMapping(value="/selectStock.do")
+	public @ResponseBody StockVO selectStock(@ModelAttribute StockVO stockVO, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return stockService.selectStock(stockVO);
 	}
 }

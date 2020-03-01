@@ -11,4 +11,5 @@ public interface StockService {
 	public void delete(StockVO stockVO) throws Exception;
 	public StockVO search(StockVO stockVO) throws Exception;
 	public List<String> keywordSearch(String keyword) throws Exception;
+	public StockVO selectStock(StockVO stockVO) throws Exception;
 }

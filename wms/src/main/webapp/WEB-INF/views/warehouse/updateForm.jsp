@@ -44,7 +44,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         })
 
         $("#select_wh").change(function() {
-          var warehouse_name = this.value
+          var warehouse_name = this.value;
           $.ajax({
             type: "post",
             async: true,

@@ -9,11 +9,11 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     <script>
       $(document).ready(function() {
         var warehouse_name = "${warehouse_name}";
-        if (warehouse_name != "" && warehouse_name != null) {
+        if (warehouse_name != "") {
           $("#select_wh").val(warehouse_name);
         }
 
-        $("input[name='stock_sort1']").change(function() {
+        $("input[name='stock_sort1']").click(function() {
           var text = "";
           $("#sort_detail").empty();
           if (this.value == "현미") {
@@ -72,7 +72,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         autocomplete="off"
       />
       <p>
-        <input type="submit" value="등록하기" />
+        <input type="submit" value="등록하기"/>
         <input type="reset" value="취소" />
       </p>
     </form>

@@ -53,6 +53,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         tab_tr.eq(tr+1).children().eq(td).text("${storageRateVO.brown_rice_rate}");
         tab_tr.eq(tr+2).children().eq(td).text("${storageRateVO.rice_rate}");
         tab_tr.eq(tr+3).children().eq(td).append("<input type='button' id='btn_update' value='수정' onclick='fn_storage_update(${storageRateVO.storage_rate_seq_num})'>");
+        tab_tr.eq(tr+4).children().eq(td).append("<input type='button' id='btn_update' value='삭제' onclick='fn_storage_delete(${storageRateVO.storage_rate_seq_num})'>");
      </c:forEach>
         
     <c:forEach var="cargoRateVO" items="${cargoRateList}">
@@ -95,8 +96,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       tab_tr.eq(tr+8).children().eq(td).text("${cargoRateVO.migration_20m_rate}");
       tab_tr.eq(tr+9).children().eq(td).text("${cargoRateVO.migration_50m_rate}");
       tab_tr.eq(tr+10).children().eq(td).append("<input type='button' id='btn_update' value='수정' onclick='fn_cargo_update(${cargoRateVO.cargo_rate_seq_num})'>");
+      tab_tr.eq(tr+11).children().eq(td).append("<input type='button' id='btn_update' value='삭제' onclick='fn_cargo_delete(${cargoRateVO.cargo_rate_seq_num})'>");
     </c:forEach>
       });
+
       function fn_storage_update(obj){
         var storage_rate_seq_num = $("<input type='hidden' name='storage_rate_seq_num' value="+obj+">");
         updateForm(storage_rate_seq_num);
@@ -115,6 +118,27 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         form.appendTo('body');
         form.submit();
       }
+
+      function fn_storage_delete(obj){
+        var form = $("<form></form>");
+        var storage_rate_seq_num = $("<input type='hidden' name='storage_rate_seq_num' value="+obj+">");
+        form.append(storage_rate_seq_num);
+        form.attr("method", 'post');
+        form.attr("action", '${contextPath}/system/storageRate/delete.do');
+        form.appendTo('body');
+        form.submit();
+      }
+      function fn_cargo_delete(obj){
+        
+        var form = $("<form></form>");
+        var cargo_rate_seq_num = $("<input type='hidden' name='cargo_rate_seq_num' value="+obj+">");
+        form.append(cargo_rate_seq_num);
+        form.attr("method", 'post');
+        form.attr("action", '${contextPath}/system/cargoRate/delete.do');
+        form.appendTo('body');
+        form.submit();
+      }
+      
     </script>
     <title>요율 설정 확인</title>
   </head>
@@ -150,6 +174,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           <td>수정</td>
           <c:forEach begin="1" end="15"><td></td></c:forEach>
         </tr>
+        <tr>
+          <td>삭제</td>
+          <c:forEach begin="1" end="15"><td></td></c:forEach>
+        </tr>
       </tbody>
     </table>
     <h3>저온창고 양곡 보관료</h3>
@@ -177,6 +205,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         </tr>
         <tr>
           <td>수정</td>
+          <c:forEach begin="1" end="3"><td></td></c:forEach>
+        </tr>
+        <tr>
+          <td>삭제</td>
           <c:forEach begin="1" end="3"><td></td></c:forEach>
         </tr>
       </tbody>
@@ -225,6 +257,9 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <tr>
         <td>수정</td><c:forEach begin="1" end="3"><td></td></c:forEach>
         </tr>
+        <tr>
+        <td>삭제</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+        </tr>
       </tbody>
     </table>
     <h3>양곡 톤백 하역료</h3>
@@ -268,7 +303,11 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <tr>
           <td>톤백 이송료50m~</td><td></td>
         </tr>
+        <tr>
         <td>수정</td><td></td>
+        </tr>
+        <tr>
+        <td>삭제</td><td></td>
         </tr>
       </tbody>
     </table>
