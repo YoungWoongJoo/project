@@ -17,50 +17,20 @@ import com.mycom.warehouse.system.vo.StorageRateVO;
 public class SystemDaoImpl implements SystemDao {
 	@Autowired
 	SqlSession sqlSession;
-
+	
 	@Override
-	public void addStorageRate(StorageRateVO storageRateVO) throws DataAccessException {
-		sqlSession.insert("mapper.setting.addStorageRate", storageRateVO);
+	public void add(Map<String, String> map, String sort) throws DataAccessException {
+		sqlSession.insert("mapper.setting.add"+sort, map);
 	}
 
 	@Override
-	public void updateStorageRate(StorageRateVO storageRateVO) throws DataAccessException {
-		sqlSession.update("mapper.setting.updateStorageRate", storageRateVO);
+	public void update(Map<String, String> map, String sort) throws DataAccessException {
+		sqlSession.update("mapper.setting.update"+sort, map);
 	}
 
 	@Override
-	public void deleteStorageRate(StorageRateVO storageRateVO) throws DataAccessException {
-		sqlSession.delete("mapper.setting.deleteStorageRate", storageRateVO);
-	}
-
-	@Override
-	public void addCargoRate(CargoRateVO cargoRateVO) throws DataAccessException {
-		sqlSession.insert("mapper.setting.addCargoRate", cargoRateVO);
-	}
-
-	@Override
-	public void updateCargoRate(CargoRateVO cargoRateVO) throws DataAccessException {
-		sqlSession.update("mapper.setting.updateCargoRate", cargoRateVO);
-	}
-
-	@Override
-	public void deleteCargoRate(CargoRateVO cargoRateVO) throws DataAccessException {
-		sqlSession.delete("mapper.setting.deleteCargoRate", cargoRateVO);
-	}
-
-	@Override
-	public void addSetting(SettingVO settingVO) throws DataAccessException {
-		sqlSession.insert("mapper.setting.addSetting", settingVO);
-	}
-
-	@Override
-	public void updateSetting(SettingVO settingVO) throws DataAccessException {
-		sqlSession.update("mapper.setting.updateSetting", settingVO);
-	}
-
-	@Override
-	public void deleteSetting(SettingVO settingVO) throws DataAccessException {
-		sqlSession.delete("mapper.setting.deleteSetting", settingVO);
+	public void delete(Map<String, String> map, String sort) throws DataAccessException {
+		sqlSession.delete("mapper.setting.delete"+sort, map);
 	}
 
 	@Override
@@ -76,6 +46,20 @@ public class SystemDaoImpl implements SystemDao {
 	@Override
 	public List<SettingVO> settingList() throws DataAccessException {
 		return sqlSession.selectList("mapper.setting.selectSettingList");
+	}
+
+	@Override
+	public Object searchRate(Map<String, String> map) throws DataAccessException {
+		if(map.containsKey("storage_rate_seq_num"))
+		{
+			String storage_rate_seq_num = map.get("storage_rate_seq_num");
+			return sqlSession.selectOne("mapper.setting.searchStorageRate", storage_rate_seq_num);
+		}
+		else
+		{
+			String cargo_rate_seq_num = map.get("cargo_rate_seq_num");
+			return sqlSession.selectOne("mapper.setting.searchCargoRate", cargo_rate_seq_num);
+		}
 	}
 
 }

@@ -9,9 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mycom.warehouse.system.dao.SystemDao;
-import com.mycom.warehouse.system.vo.CargoRateVO;
 import com.mycom.warehouse.system.vo.SettingVO;
-import com.mycom.warehouse.system.vo.StorageRateVO;
 
 @Service("systemService")
 @Transactional(propagation = Propagation.REQUIRED)
@@ -20,49 +18,18 @@ public class SystemServiceImpl implements SystemService {
 	SystemDao systemDao;
 
 	@Override
-	public void addStorageRate(StorageRateVO storageRateVO) throws Exception {
-		systemDao.addStorageRate(storageRateVO);
+	public void add(Map<String, String> map, String sort) throws Exception {
+		systemDao.add(map, sort);
 	}
 
 	@Override
-	public void updateStorageRate(StorageRateVO storageRateVO) throws Exception {
-		systemDao.updateStorageRate(storageRateVO);
+	public void update(Map<String, String> map, String sort) throws Exception {
+		systemDao.update(map, sort);
 	}
 
 	@Override
-	public void deleteStorageRate(StorageRateVO storageRateVO) throws Exception {
-		systemDao.deleteStorageRate(storageRateVO);
-	}
-
-	@Override
-	public void addCargoRate(CargoRateVO cargoRateVO) throws Exception {
-		systemDao.addCargoRate(cargoRateVO);
-	}
-
-	@Override
-	public void updateCargoRate(CargoRateVO cargoRateVO) throws Exception {
-		systemDao.updateCargoRate(cargoRateVO);
-	}
-
-	@Override
-	public void deleteCargoRate(CargoRateVO cargoRateVO) throws Exception {
-		systemDao.deleteCargoRate(cargoRateVO);
-	}
-
-	@Override
-	public void addSetting(SettingVO settingVO) throws Exception {
-		systemDao.addSetting(settingVO);
-
-	}
-
-	@Override
-	public void updateSetting(SettingVO settingVO) throws Exception {
-		systemDao.updateSetting(settingVO);
-	}
-
-	@Override
-	public void deleteSetting(SettingVO settingVO) throws Exception {
-		systemDao.deleteSetting(settingVO);
+	public void delete(Map<String, String> map, String sort) throws Exception {
+		systemDao.delete(map, sort);
 	}
 
 	@Override
@@ -73,6 +40,12 @@ public class SystemServiceImpl implements SystemService {
 	@Override
 	public List<SettingVO> settingList() throws Exception {
 		return systemDao.settingList();
+	}
+
+	@Override
+	public Object searchRate(Map<String, String> map) throws Exception {
+		// TODO Auto-generated method stub
+		return systemDao.searchRate(map);
 	}
 
 }

@@ -16,18 +16,18 @@
 	
 	<resultMap type="CargoRateVO" id="cargoRateResult">
 		<result property="cargo_rate_seq_num" column="cargo_rate_seq_num"/>
-		<result property="wrap_sort" column="cargo_rate_seq_num"/>
-		<result property="load_rate" column="cargo_rate_seq_num"/>
-		<result property="unload_rate" column="cargo_rate_seq_num"/>
-		<result property="warehousing_rate" column="cargo_rate_seq_num"/>
-		<result property="release_rate" column="cargo_rate_seq_num"/>
-		<result property="purchase_warehousing_rate" column="cargo_rate_seq_num"/>
-		<result property="purchase_load_rate" column="cargo_rate_seq_num"/>
-		<result property="security_rate" column="cargo_rate_seq_num"/>
-		<result property="transfer_rate" column="cargo_rate_seq_num"/>
-		<result property="migration_20m_rate" column="cargo_rate_seq_num"/>
-		<result property="migration_50m_rate" column="cargo_rate_seq_num"/>
-		<result property="bag_purchase_rate" column="cargo_rate_seq_num"/>
+		<result property="wrap_sort" column="wrap_sort"/>
+		<result property="load_rate" column="load_rate"/>
+		<result property="unload_rate" column="unload_rate"/>
+		<result property="warehousing_rate" column="warehousing_rate"/>
+		<result property="release_rate" column="release_rate"/>
+		<result property="purchase_warehousing_rate" column="purchase_warehousing_rate"/>
+		<result property="purchase_load_rate" column="purchase_load_rate"/>
+		<result property="security_rate" column="security_rate"/>
+		<result property="transfer_rate" column="transfer_rate"/>
+		<result property="migration_20m_rate" column="migration_20m_rate"/>
+		<result property="migration_50m_rate" column="migration_50m_rate"/>
+		<result property="bag_purchase_rate" column="bag_purchase_rate"/>
 	</resultMap>
 	
 	<resultMap id="settingResult" type="SettingVO">
@@ -37,7 +37,7 @@
 		<result property="setting_officer_email" column="setting_officer_email" />
 	</resultMap>
 	
-	<insert id="addStorageRate" parameterType="storageRateVO">
+	<insert id="addstorageRate" parameterType="java.util.Map">
 		<selectKey resultType="int" keyProperty="storage_rate_seq_num" order="BEFORE">
 			select storage_rate_seq_num.nextval from dual
 		</selectKey>
@@ -55,7 +55,7 @@
 									#{rice_rate})
 	</insert>
 	
-	<update id="updateStorageRate" parameterType="storageRateVO">
+	<update id="updatestorageRate" parameterType="java.util.Map">
 		update t_storage_rate set 	warehouse_region = #{warehouse_region},
 									warehouse_rating = #{warehouse_rating},
 									white_rice_rate = #{white_rice_rate},
@@ -64,11 +64,11 @@
 					where storage_rate_seq_num = #{storage_rate_seq_num}
 	</update>
 	
-	<delete id="deleteStorageRate" parameterType="storageRateVO">
+	<delete id="deletestorageRate" parameterType="java.util.Map">
 		delete from t_storage_rate where storage_rate_seq_num = #{storage_rate_seq_num}
 	</delete>
 	
-	<insert id="addCargoRate" parameterType="cargoRateVO">
+	<insert id="addcargoRate" parameterType="java.util.Map">
 		<selectKey resultType="int" keyProperty="cargo_rate_seq_num" order="BEFORE">
 			select cargo_rate_seq_num.nextval from dual
 		</selectKey>
@@ -100,7 +100,7 @@
 									#{bag_purchase_rate})
 	</insert>
 	
-	<update id="updateCargoRate" parameterType="cargoRateVO">
+	<update id="updatecargoRate" parameterType="java.util.Map">
 		update t_cargo_rate set 	wrap_sort = #{wrap_sort},
 									load_rate = #{load_rate},
 									unload_rate = #{unload_rate},
@@ -116,11 +116,11 @@
 					where cargo_rate_seq_num = #{cargo_rate_seq_num}
 	</update>
 	
-	<delete id="deleteCargoRate" parameterType="cargoRateVO">
+	<delete id="deletecargoRate" parameterType="java.util.Map">
 		delete from t_cargo_rate where cargo_rate_seq_num = #{cargo_rate_seq_num}
 	</delete>
 	
-	<insert id="addSetting" parameterType="settingVO">
+	<insert id="addsetting" parameterType="java.util.Map">
 		insert into t_setting(setting_region,
 									setting_chief_name,
 									setting_manager_name,
@@ -131,14 +131,14 @@
 									#{setting_officer_email})
 	</insert>
 	
-	<update id="updateSetting" parameterType="settingVO">
+	<update id="updatesetting" parameterType="java.util.Map">
 		update t_setting set 	setting_chief_name = #{setting_chief_name},
 									setting_manager_name = #{setting_manager_name},
 									setting_officer_email = #{setting_officer_email}
 					where setting_region = #{setting_region}
 	</update>
 	
-	<delete id="deleteSetting" parameterType="settingVO">
+	<delete id="deletesetting" parameterType="java.util.Map">
 		delete from t_setting where setting_region = #{setting_region}
 	</delete>
 	
@@ -152,6 +152,14 @@
 	
 	<select id="selectSettingList" resultMap="settingResult">
 		select * from t_setting order by setting_region
+	</select>
+	
+	<select id="searchStorageRate" resultMap="storageRateResult" parameterType="String">
+		select * from t_storage_rate where to_char(storage_rate_seq_num) = #{storage_rate_seq_num}
+	</select>
+	
+	<select id="searchCargoRate" resultMap="cargoRateResult" parameterType="String">
+		select * from t_cargo_rate where to_char(cargo_rate_seq_num) = #{cargo_rate_seq_num}
 	</select>
 	
 </mapper>

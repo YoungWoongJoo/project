@@ -12,9 +12,15 @@
 			var tr = $(obj).parent().parent();
 			var form = $("<form></form>");
 			var setting_region = $("<input type='hidden' name='setting_region' value="+tr.children().eq(0).text()+">");
+			var setting_chief_name = $("<input type='hidden' name='setting_chief_name' value="+tr.children().eq(1).text()+">");
+			var setting_manager_name = $("<input type='hidden' name='setting_manager_name' value="+tr.children().eq(2).text()+">");
+			var setting_officer_email = $("<input type='hidden' name='setting_officer_email' value="+tr.children().eq(3).text()+">");
 			form.append(setting_region);
+			form.append(setting_chief_name);
+			form.append(setting_manager_name);
+			form.append(setting_officer_email);
 			form.attr("method", 'post');
-			form.attr("action", '${contextPath}/system/setting/update.do');
+			form.attr("action", '${contextPath}/system/setting/updateForm.do');
 			form.appendTo('body');
 			form.submit();
 		};
