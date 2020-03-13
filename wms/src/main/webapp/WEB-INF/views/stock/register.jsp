@@ -37,6 +37,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       method="POST"
       action="${contextPath}/stock/addNewStock.do"
     >
+      날짜 : <input id="input_date" type="month" name="stock_month" required><br>
       창고 :
       <select id="select_wh" name="warehouse_name" required>
         <option value="선택" selected disabled>선택</option>

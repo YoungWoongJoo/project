@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
+import com.mycom.warehouse.stock.vo.MonthlyStockVO;
 import com.mycom.warehouse.stock.vo.StockVO;
 
 @Repository("stockDao")
@@ -15,8 +16,10 @@ public class StockDaoImpl implements StockDao {
 	SqlSession sqlSession;
 
 	@Override
-	public void insertNewStock(StockVO stockVO) throws DataAccessException {
+	public void insertNewStock(StockVO stockVO, MonthlyStockVO monthlyStockVO) throws DataAccessException {
 		sqlSession.insert("mapper.stock.insertNewStock", stockVO);
+		monthlyStockVO.setStock_seq_num(stockVO.getStock_seq_num());
+		sqlSession.insert("mapper.stock.insertNewMonthlyStock", monthlyStockVO);
 	}
 
 	@Override
@@ -50,6 +53,11 @@ public class StockDaoImpl implements StockDao {
 	@Override
 	public StockVO selectStock(StockVO stockVO) throws DataAccessException {
 		return sqlSession.selectOne("mapper.stock.selectStock", stockVO);
+	}
+
+	@Override
+	public List<String> selectMonth(String warehouse_name) throws DataAccessException {
+		return sqlSession.selectList("mapper.stock.selectMonth", warehouse_name);
 	}
 
 }

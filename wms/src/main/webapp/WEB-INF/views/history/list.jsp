@@ -74,6 +74,16 @@
 						str += '<tr><td colspan="10">선택된 창고에 관리 이력이 없습니다.</td></tr>';
 					}
 					$("#history_table").append(str);
+					for(var i=0; i<$("#history_table tr").length; i++)
+					{
+						for(var j=4; j<$("#history_table tr").eq(i).find('td').length;j++)
+						{
+							var num;
+							num = $("#history_table tr").eq(i).find('td').eq(j).text();
+							num = numberFormat(num);
+							$("#history_table tr").eq(i).find('td').eq(j).text(num);
+						}
+					}
 				},
 				error: function(data, textStatus) {
 					alert("에러가 발생했습니다. 다시 시도해주세요.");
@@ -93,6 +103,10 @@
 		form.attr("action", '${contextPath}/history/delete.do');
 		form.appendTo('body');
 		form.submit();
+	}
+
+	function numberFormat(num) {
+   		return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 
 </script>

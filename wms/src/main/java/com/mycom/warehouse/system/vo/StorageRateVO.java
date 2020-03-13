@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 @Component("storageRateVO")
 public class StorageRateVO {
 	private int storage_rate_seq_num;
+	private String rate_year;
 	private String warehouse_region; //창고지역등급
 	private String warehouse_rating; //창고등급(일반/저온)
 	private String white_rice_rate; //쌀보관료
@@ -16,6 +17,12 @@ public class StorageRateVO {
 	}
 	public void setStorage_rate_seq_num(int storage_rate_seq_num) {
 		this.storage_rate_seq_num = storage_rate_seq_num;
+	}
+	public String getRate_year() {
+		return rate_year;
+	}
+	public void setRate_year(String rate_year) {
+		this.rate_year = rate_year;
 	}
 	public String getWarehouse_region() {
 		return warehouse_region;

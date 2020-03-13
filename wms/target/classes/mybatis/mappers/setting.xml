@@ -7,6 +7,7 @@
 	<!-- 리절트 맵 정의 -->
 	<resultMap type="StorageRateVO" id="storageRateResult">
 		<result property="storage_rate_seq_num" column="storage_rate_seq_num"/>
+		<result property="rate_year" column="rate_year"/>
 		<result property="warehouse_region" column="warehouse_region"/>
 		<result property="warehouse_rating" column="warehouse_rating"/>
 		<result property="white_rice_rate" column="white_rice_rate"/>
@@ -16,6 +17,7 @@
 	
 	<resultMap type="CargoRateVO" id="cargoRateResult">
 		<result property="cargo_rate_seq_num" column="cargo_rate_seq_num"/>
+		<result property="rate_year" column="rate_year"/>
 		<result property="wrap_sort" column="wrap_sort"/>
 		<result property="load_rate" column="load_rate"/>
 		<result property="unload_rate" column="unload_rate"/>
@@ -42,12 +44,14 @@
 			select storage_rate_seq_num.nextval from dual
 		</selectKey>
 		insert into t_storage_rate(storage_rate_seq_num,
+									rate_year,
 									warehouse_region,
 									warehouse_rating,
 									white_rice_rate,
 									brown_rice_rate,
 									rice_rate)
 							values(#{storage_rate_seq_num},
+									#{rate_year},
 									#{warehouse_region},
 									#{warehouse_rating},
 									#{white_rice_rate},
@@ -73,6 +77,7 @@
 			select cargo_rate_seq_num.nextval from dual
 		</selectKey>
 		insert into t_cargo_rate(cargo_rate_seq_num,
+									rate_year,
 									wrap_sort,
 									load_rate,
 									unload_rate,
@@ -86,6 +91,7 @@
 									migration_50m_rate,
 									bag_purchase_rate)
 							values(#{cargo_rate_seq_num},
+									#{rate_year},
 									#{wrap_sort},
 									#{load_rate},
 									#{unload_rate},
@@ -142,6 +148,10 @@
 		delete from t_setting where setting_region = #{setting_region}
 	</delete>
 	
+	<select id="selectRateYears" resultType="int">
+		select distinct rate_year from t_storage_rate order by rate_year desc
+	</select>
+	
 	<select id="selectStorageRateList" resultMap="storageRateResult">
 		select * from t_storage_rate order by storage_rate_seq_num
 	</select>
@@ -172,6 +182,14 @@
 	
 	<select id="selectOnesetting" resultMap="settingResult" parameterType="java.util.Map">
 		select * from t_setting where setting_region = #{setting_region}
+	</select>
+	
+	<select id="searchStorageRateList" resultMap="storageRateResult" parameterType="java.util.Map">
+		select * from t_storage_rate where warehouse_region = #{warehouse_region} and warehouse_rating = #{warehouse_rating} and rate_year = #{rate_year}
+	</select>
+	
+	<select id="searchCargoRateList" resultMap="cargoRateResult" parameterType="java.util.Map">
+		select * from t_cargo_rate where rate_year = #{rate_year} order by cargo_rate_seq_num
 	</select>
 	
 </mapper>

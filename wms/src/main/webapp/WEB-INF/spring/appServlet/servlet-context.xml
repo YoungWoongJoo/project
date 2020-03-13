@@ -58,6 +58,7 @@
 	  	<mvc:mapping path="/member/updateMember.do"/>
 	  	<mvc:mapping path="/mypage/*.do"/>
 	  	<mvc:mapping path="/stock/*.do"/>
+	  	<mvc:mapping path="/bill/*.do"/>
 	  	<beans:bean class="com.mycom.warehouse.common.interceptor.LoginCheckInterceptor" />	  	
 	  </mvc:interceptor>
 	 </mvc:interceptors>

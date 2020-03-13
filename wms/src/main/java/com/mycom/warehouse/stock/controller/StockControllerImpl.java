@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mycom.warehouse.common.Controller.BaseController;
 import com.mycom.warehouse.member.vo.MemberVO;
 import com.mycom.warehouse.stock.service.StockService;
+import com.mycom.warehouse.stock.vo.MonthlyStockVO;
 import com.mycom.warehouse.stock.vo.StockVO;
 import com.mycom.warehouse.warehouse.service.WarehouseService;
 import com.mycom.warehouse.warehouse.vo.WarehouseVO;
@@ -56,7 +57,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 
 	@Override
 	@RequestMapping(value="/addNewStock.do")
-	public ResponseEntity<String> addNewStock(@ModelAttribute("stockVO") StockVO stockVO, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ResponseEntity<String> addNewStock(@ModelAttribute("stockVO") StockVO stockVO, @ModelAttribute("monthlyStockVO") MonthlyStockVO monthlyStockVO, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String message;
 		ResponseEntity<String> resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -93,7 +94,7 @@ public class StockControllerImpl extends BaseController implements StockControll
 			//단량별 포대 개수 계산 끝
 			
 			try {
-				stockService.register(stockVO);
+				stockService.register(stockVO, monthlyStockVO);
 			    message  = "<script>";
 			    message +=" alert('재고 등록을 마쳤습니다.재고확인창으로 이동합니다.');";
 			    message += " location.href='"+request.getContextPath()+"/stock/list.do';";
@@ -249,5 +250,12 @@ public class StockControllerImpl extends BaseController implements StockControll
 	public @ResponseBody StockVO selectStock(@ModelAttribute StockVO stockVO, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return stockService.selectStock(stockVO);
+	}
+
+	@Override
+	@RequestMapping(value="/selectMonth.do")
+	public @ResponseBody List<String> selectMonth(@RequestParam("warehouse_name") String warehouse_name, HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		return stockService.selectMonth(warehouse_name);
 	}
 }

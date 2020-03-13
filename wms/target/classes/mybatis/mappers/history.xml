@@ -31,7 +31,6 @@
 		<result property="stock_unit" column="stock_unit" />
 		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
 		<result property="stock_quantity_bag" column="stock_quantity_bag" />
-		<result property="stock_state" column="stock_state" />
 	</resultMap>
 		
 	<select id="selectStock" parameterType="historyVO" resultMap="stockResult">
@@ -73,8 +72,7 @@
 	<update id="updateStock" parameterType="stockVO">
 	<![CDATA[
 		update t_stock set 		stock_quantity_40kg = #{stock_quantity_40kg},
-								stock_quantity_bag = #{stock_quantity_bag},
-								stock_state = 'disable'
+								stock_quantity_bag = #{stock_quantity_bag}
 					where stock_seq_num = #{stock_seq_num}
 	]]>
 	</update>

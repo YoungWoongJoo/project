@@ -26,8 +26,6 @@
 							+ '<th>단량</th>'
 							+ '<th>수량</th>'
 							+ '<th>포대수</th>'
-							+ '<th>수정</th>'
-							+ '<th>삭제</th>'
 							+ '</thead>';
 					if (stockVO.length != 0) {
 						$.each(stockVO,function(i){
@@ -37,24 +35,22 @@
 								+ '<td>'+stockVO[i].stock_sort2+stockVO[i].stock_sort1+'</td>'
 								+ '<td>'+stockVO[i].stock_unit+'</td>'
 								+ '<td>'+stockVO[i].stock_quantity_40kg+'</td>'
-								+ '<td>'+stockVO[i].stock_quantity_bag+'</td><td>';
-							if(stockVO[i].stock_state == 'enable')
-							{
-								str += "<input type='button' id='update_stock' value='수정' onclick='fn_update(this)'>";
-								str += "</td><td>";
-								str += "<input type='button' id='delete_stock' value='삭제' onclick='fn_delete(this)'>";
-							}
-							else{
-								str += "불가";
-								str += "</td><td>";
-								str += "불가";
-							}
-							str += '</td></tr>';
+								+ '<td>'+stockVO[i].stock_quantity_bag+'</td></tr>';
 						});
 					} else {
 						str += '<tr><td colspan="5">선택된 창고에 재고가 없습니다.</td></tr>';
 					}
 					$("#stock_table").append(str);
+					for(var i=0; i<$("#stock_table tr").length; i++)
+					{
+						for(var j=0; j<$("#stock_table tr").eq(i).find('td').length;j++)
+						{
+							var num;
+							num = $("#stock_table tr").eq(i).find('td').eq(j).text();
+							num = numberFormat(num);
+							$("#stock_table tr").eq(i).find('td').eq(j).text(num);
+						}
+					}
 				},
 				error: function(data, textStatus) {
 					alert("에러가 발생했습니다. 다시 시도해주세요.");
@@ -65,6 +61,10 @@
 			});
 		});
 	});
+
+	function numberFormat(num) {
+   		return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
 
 	function fn_update(obj){
 		var tr = $(obj).parent().parent();

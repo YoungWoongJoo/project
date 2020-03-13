@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 @Component("cargoRateVO")
 public class CargoRateVO {
 	private int cargo_rate_seq_num;
+	private String rate_year;
 	private String wrap_sort; //단량(포장재 종류)
 	private String load_rate; //상차료
 	private String unload_rate; //하차료
@@ -23,6 +24,12 @@ public class CargoRateVO {
 	}
 	public void setCargo_rate_seq_num(int cargo_rate_seq_num) {
 		this.cargo_rate_seq_num = cargo_rate_seq_num;
+	}
+	public String getRate_year() {
+		return rate_year;
+	}
+	public void setRate_year(String rate_year) {
+		this.rate_year = rate_year;
 	}
 	public String getWrap_sort() {
 		return wrap_sort;

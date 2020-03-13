@@ -104,6 +104,12 @@ public class HistoryDaoImpl implements HistoryDao {
 			num1 = new BigDecimal(prev_quantity);
 			num2 = new BigDecimal(historyVO.getHistory_quantity());
 			present_quantity = num1.subtract(num2).toString();
+			BigDecimal num = new BigDecimal(present_quantity);
+			BigDecimal zero = new BigDecimal("0");
+			if(num.compareTo(zero)==0)
+			{
+				present_quantity = "0";
+			}
 			if(Double.parseDouble(present_quantity)<0)
 			{
 				msg = "입력하신 출고량이 이월량보다 큽니다. 다시 시도해주세요.";

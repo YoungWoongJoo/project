@@ -14,7 +14,7 @@
 		<li><a href="${contextPath}/history/register.do">재고 관리</a></li>
 		<li><a href="${contextPath}/stock/list.do">재고 현황</a></li>
 		<li><a href="${contextPath}/history/list.do">재고 관리 내역</a></li>
-		<li><a href="#">보관임/부대비 청구서</a></li>
+		<li><a href="${contextPath}/bill/view.do">보관임/부대비 청구서</a></li>
 	</ul>
 	<h1>시스템 설정</h1>
 	<ul>
