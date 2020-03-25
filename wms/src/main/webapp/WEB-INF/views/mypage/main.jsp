@@ -89,23 +89,14 @@ uri="http://java.sun.com/jsp/jstl/core"%>
 </head>
 
 <body>
-  <h1>마이 페이지</h1>
-  <ul>
-    <li><a href="${contextPath}/mypage/updateForm.do">회원 정보 수정</a></li>
-    <li><a href="${contextPath}/warehouse/register.do">창고 등록</a></li>
-    <li><a href="${contextPath}/warehouse/updateForm.do">창고 수정</a></li>
-    <li><a href="${contextPath}/stock/register.do">재고 등록</a></li>
-    <li><a href="${contextPath}/stock/list.do">재고 현황</a></li>
-  </ul>
-  <p></p>
   <h1>회원 정보</h1>
   이메일 : ${memberVO.member_email}
   <p></p>
   <input type="button" value="회원정보 수정" onclick="location.href='${contextPath}/mypage/updateForm.do'">
-  <p></p>
+  <br><br>
   <h1>내 창고 목록</h1>
   <p></p>
-  <table border="1">
+  <table>
     <thead>
       <th>선택</th>
       <th>소재지</th>

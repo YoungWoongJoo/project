@@ -12,5 +12,5 @@ import org.springframework.web.servlet.ModelAndView;
 public interface BillController {
 	public ModelAndView view(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public @ResponseBody Map<String,Object> calc(@RequestParam Map<String,Object> map, HttpServletRequest request, HttpServletResponse response) throws Exception;
-	public void downloadExcel(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	public void downloadExcel(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }

@@ -56,12 +56,13 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           id="member_id"
           type="text"
           value="${memberVO.member_id}"
+          size="20"
           disabled
         />
         <input type="hidden" name="member_id" value="${memberVO.member_id }" />
       </p>
       <p>
-        비밀번호 : <input type="password" id="member_pw" name="member_pw" />
+        비밀번호 : <input type="password" id="member_pw" name="member_pw" size="20"/>
       </p>
       <p>
         비밀번호 재입력 :
@@ -69,6 +70,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           type="password"
           id="member_pw_check"
           placeholder="비밀번호 확인"
+          size="20"
         />
         <span id="alert-success" style="display: none;"
           >비밀번호가 일치합니다.</span

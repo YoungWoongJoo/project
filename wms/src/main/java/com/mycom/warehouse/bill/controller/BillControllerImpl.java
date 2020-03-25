@@ -18,8 +18,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Color;
+import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +56,10 @@ import com.mycom.warehouse.warehouse.vo.WarehouseVO;
 public class BillControllerImpl extends BaseController implements BillController{
 	private static final int STORAGE_BILL_COLUMN = 13;
 	private static final int CARGO_BILL_COLUMN = 15;
+	private static final int STORAGE_BILL_ROW_START = 10;
+	private static final int STORAGE_BILL_COL_START = 2;
+	private static final int CARGO_BILL_ROW_START = 9;
+	private static final int CARGO_BILL_COL_START = 2;
 	@Autowired
 	WarehouseVO warehouseVO;
 	@Autowired
@@ -100,28 +118,142 @@ public class BillControllerImpl extends BaseController implements BillController
 		
 		return billMap;
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	@RequestMapping(value="downloadExcel.do")
-	public void downloadExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void downloadExcel(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String,Object> listMap = billService.selectLists(map);
+		List<String[]> storageBill = calcStorageBill(map, listMap); //보관료청구서 계산
+		Map<String, Object> cargoMap = calcCargoBill(map, listMap); //부대비청구서 계산
+		List<String[]> cargoBill = (List<String[]>) cargoMap.get("cargoBill");
+		String warehouse_name = (String) map.get("warehouse_name");
+		String stock_month = (String) map.get("stock_month");
+		warehouseVO = warehouseService.searchWarehouse(warehouse_name);
+		
 		File dir = new File(request.getSession().getServletContext().getRealPath("/")+"resources"+File.separator+"billForm"); //엑셀파일 디렉토리위치
 		FileInputStream in = new FileInputStream(dir+File.separator+"보관임양식.xlsx"); //엑셀 파일 읽기
 		
 		Workbook wb = WorkbookFactory.create(in); //읽은 엑셀 파일을 workbook에 저장
+		int i,j;
+		Row row;
+		Cell cell;
+		String value;
+		int cellNum, totalPrice=0;
+		
+		if(storageBill!=null)
+		{
+			wb.setSheetName(0, warehouse_name);
+			Sheet storageBillSheet = wb.getSheetAt(0);
+			for(i=0; i<storageBill.size(); i++)
+			{
+				row = storageBillSheet.getRow(STORAGE_BILL_ROW_START+i);
+				
+				for(j=0; j<STORAGE_BILL_COLUMN; j++)
+				{
+					cellNum = STORAGE_BILL_COL_START+j;
+					if(cellNum>=6)
+						cellNum+=2;
+					if(cellNum==16)
+						cellNum+=1;
+					cell = row.getCell(cellNum);
+					
+					if(storageBill.get(i)[j]!=null)
+					{
+						if(j==12)
+							totalPrice +=  Integer.parseInt(storageBill.get(i)[j]);
+						value = storageBill.get(i)[j];
+						value = value.replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+						cell.setCellValue(value);
+					}
+				}
+			}
+			row = storageBillSheet.getRow(25);
+			cell = row.getCell(17);
+			value = Integer.toString(totalPrice).replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+			cell.setCellValue(value); //총합계액
+			
+			setHeader(storageBillSheet, warehouseVO, stock_month);
+			
+		}
+		totalPrice=0;
+		if(cargoBill.size()!=0)
+		{
+			wb.setSheetName(1, warehouse_name+"(부대)");
+			Sheet cargoBillSheet = wb.getSheetAt(1);
+			for(i=0; i<cargoBill.size(); i++)
+			{
+				row = cargoBillSheet.getRow(CARGO_BILL_ROW_START+i);
+				
+				for(j=0; j<CARGO_BILL_COLUMN; j++)
+				{
+					cellNum = CARGO_BILL_COL_START+j;
+					cell = row.getCell(cellNum);
+					
+					if(cargoBill.get(i)[j]!=null)
+					{
+						if(j==14)
+							totalPrice +=  Integer.parseInt(cargoBill.get(i)[j]);
+						value = cargoBill.get(i)[j];
+						value = value.replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+						cell.setCellValue(value);
+					}
+				}
+			}
+			row = cargoBillSheet.getRow(24);
+			cell = row.getCell(16);
+			value = Integer.toString(totalPrice).replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+			cell.setCellValue(value); //총합계액
+			
+			setHeader(cargoBillSheet, warehouseVO, stock_month);
+		}
+		else
+		{
+			wb.removeSheetAt(1);
+		}
+		
+		String[] date = stock_month.split("-");
 		
 		String userAgent = request.getHeader("User-Agent");
 		boolean ie = (userAgent.indexOf("MSIE") > -1) || (userAgent.indexOf("Trident") > -1);
-		String fileName = "";
+		String fileName = "보관임청구서("+date[0].substring(2)+"년"+date[1]+"월"+")-"+warehouse_name.split("창고")[0]+".xlsx";
 		if (ie) {
-		        fileName = URLEncoder.encode("보관임청구서.xlsx", "UTF-8").replaceAll("\\+", "%20");
+		        fileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
 		} else {
-		        fileName = new String("보관임청구서.xlsx".getBytes("UTF-8"), "iso-8859-1");
+		        fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");
 		}
 		response.setHeader("Content-Disposition", "attachment; filename=\""+ fileName +"\"");
 		 response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-		
+		 		
 		wb.write(response.getOutputStream()); //workbook을 통해 엑셀파일 생성
 		response.getOutputStream().close();
+	}
+	
+	private void setHeader(Sheet sheet, WarehouseVO warehouseVO, String stock_month)
+	{
+		Row row = null;
+		Cell cell = null;
+		
+		row = sheet.getRow(1);
+		cell = row.getCell(8);
+		String month = stock_month.split("-")[1];
+		String value = cell.getStringCellValue();
+		cell.setCellValue(month+value);
+		
+		row = sheet.getRow(4);
+		cell = row.getCell(15);
+		cell.setCellValue(warehouseVO.getWarehouse_name());
+		row = sheet.getRow(5);
+		cell = row.getCell(15);
+		cell.setCellValue(warehouseVO.getWarehouse_owner());
+		
+		row = sheet.getRow(5);
+		cell = row.getCell(20);
+		cell.setCellValue(warehouseVO.getWarehouse_name());
+		cell = row.getCell(21);
+		cell.setCellValue(warehouseVO.getWarehouse_code());
+		cell = row.getCell(22);
+		cell.setCellValue(warehouseVO.getWarehouse_region()+warehouseVO.getWarehouse_rating());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -335,6 +467,7 @@ public class BillControllerImpl extends BaseController implements BillController
 		Iterator<HistoryVO> historyIterator = historyList.iterator();
 		while(historyIterator.hasNext())
 		{
+			
 			historyVO = historyIterator.next();
 			history_sort1 = historyVO.getHistory_sort1();
 			history_sort2 = historyVO.getHistory_sort2();
@@ -569,78 +702,4 @@ public class BillControllerImpl extends BaseController implements BillController
 			}
 		}
 	}
-
-	
-	/*
-	private String[][] calcStorageBill(Map<String,Object> map, Map<String,Object> listMap)
-	{
-		List<MonthlyStockVO> monthlyStockList = (List<MonthlyStockVO>) listMap.get("monthlyStockList");
-		List<HistoryVO> historyList = (List<HistoryVO>) listMap.get("historyList");
-		List<StorageRateVO> storageRateList = (List<StorageRateVO>) listMap.get("storageRateList");
-		
-		int rowNum =  countRowNumForStorageBill(monthlyStockList, historyList);
-		String[][] storageBill = new String[rowNum][STORAGE_BILL_COLUMN];
-		
-		return storageBill;
-	}
-	
-	private String[][] calcCargoBill(Map<String,Object> map, Map<String,Object> listMap)
-	{
-		List<HistoryVO> historyList = (List<HistoryVO>) listMap.get("historyList");
-		List<CargoRateVO> cargoRateList = (List<CargoRateVO>) listMap.get("cargoRateList");
-		
-		int rowNum = countRowNumForCargoBill(historyList);
-		String[][] cargoBill = new String[rowNum][CARGO_BILL_COLUMN];
-		return cargoBill;
-	}
-	
-	private int countRowNumForStorageBill(List<MonthlyStockVO> monthlyStockList, List<HistoryVO> historyList)
-	{
-		int rowNum = 0;
-		
-		rowNum += monthlyStockList.size();
-		
-		Iterator<HistoryVO> historyIterator = historyList.iterator();
-		
-		while(historyIterator.hasNext())
-		{
-			
-		}
-		
-		return rowNum;
-	}
-	
-	private int countRowNumForCargoBill(List<HistoryVO> historyList)
-	{
-		int rowNum = 0;
-		
-		Iterator<HistoryVO> iterator = historyList.iterator();
-		while(iterator.hasNext())
-		{
-			historyVO = iterator.next();
-			String stock_unit = historyVO.getStock_unit();
-			String history_sort2 = historyVO.getHistory_sort2();
-			
-			switch(history_sort2)
-			{
-			case "현장수매":
-				rowNum += 2;
-				if(stock_unit.equals("800"))
-					rowNum += 1;
-				break;
-			case "수매이동":
-				rowNum += 4;
-				if(stock_unit.equals("800"))
-					rowNum += 1;
-				break;
-			case "없음":
-				rowNum += 1;
-			default:
-				rowNum += 2;
-			}
-		}
-		
-		return rowNum;
-	}
-	*/
 }

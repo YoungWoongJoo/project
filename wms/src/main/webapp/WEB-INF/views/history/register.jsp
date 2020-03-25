@@ -20,10 +20,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           $("#sort_detail").empty();
           if (this.value == "현미") {
             text =
-              "원산지 : <input type='text' id='stock_sort2' name='stock_sort2' autocomplete='off' required>";
+              "원산지 : <input type='text' id='stock_sort2' name='stock_sort2' size='10' autocomplete='off' required>";
           } else {
             text =
-              "품종 : <input type='text' id='stock_sort2' name='stock_sort2' autocomplete='off' required>";
+              "품종 : <input type='text' id='stock_sort2' name='stock_sort2' size='10' autocomplete='off' required>";
           }
           $("#sort_detail").append(text);
         });
@@ -79,7 +79,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         	}
           else if (this.value == "50") {
             var text =
-              "거리 입력 : <input type='text' id='distance' required autocomplete='off'>(m)";
+              "거리 입력 : <input type='text' id='distance' size='3' required autocomplete='off'>(m)";
               distance.append(text);
           }
         });
@@ -227,7 +227,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       </div>
       <div id="transfer_detail"></div>
       수량 :
-      <input type="text" name="history_quantity" required autocomplete="off" />
+      <input type="text" name="history_quantity" size="7" required autocomplete="off" />
       <p>
         <input type="submit" value="등록하기" />
         <input type="reset" value="취소" />

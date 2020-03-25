@@ -26,12 +26,6 @@ public class BillServiceImpl implements BillService {
 	}
 
 	@Override
-	public Map<String, Object> calc(Map<String, Object> map) throws Exception {
-		// TODO Auto-generated method stub
-		return billDao.calc(map);
-	}
-
-	@Override
 	public Map<String, Object> selectLists(Map<String, Object> map) throws Exception {
 		return billDao.selectLists(map);
 	}

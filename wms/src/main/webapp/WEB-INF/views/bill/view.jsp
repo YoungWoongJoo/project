@@ -6,10 +6,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.3/xlsx.full.min.js"></script>
 <script>
 	$(document).ready(function(){
 		$("#select_wh").change(function() {
+			$("#storage_bill_table").prop("style", "display:none");
+			$("#cargo_bill_table").prop("style", "display:none");
+			$("#div_bill").prop("style", "display:none");
+			$("#btn_download").hide();
+			$("#storage_bill_table tfoot").children().eq(0).children().eq(2).text("");
+			$("#cargo_bill_table tfoot").children().eq(0).children().eq(2).text("");
           var warehouse_name = this.value;
           $.ajax({
             type: "post",
@@ -34,6 +39,13 @@
             }
           })
         })
+        
+        $("#select_month").change(function() {
+        	$("#storage_bill_table").prop("style", "display:none");
+			$("#cargo_bill_table").prop("style", "display:none");
+			$("#div_bill").prop("style", "display:none");
+			$("#btn_download").hide();
+        });
 
 		$("#btn_bill").click(function(){
 			$("#storage_bill_table").prop("style", "display:none");
@@ -60,7 +72,6 @@
 				data : {warehouse_name : warehouse_name, stock_month : stock_month},
 				dataType : "text",
 				success : function(data){
-					$("#btn_download").show();
 					var map = JSON.parse(data);
 					var storageBill = map.storageBill;
 					var cargoBill = map.cargoBill;
@@ -68,6 +79,10 @@
 					var cargoBillError = map.cargoBillError;
 					var txt = "";
 					var totalPrice = 0;
+					if(storageBillError==null&&cargoBillError==null)
+					{
+						$("#btn_download").show();
+					}
 					if(storageBill!=null)
 					{
 						for(var i=0; i<storageBill.length;i++)
@@ -113,7 +128,13 @@
 						txt += storageBillError;
 						txt += "</td></tr>";
 					}
-					else if(cargoBill!=null)
+					else if(cargoBill.length==0&&cargoBillError==null)
+					{
+						txt += "<tr><td colspan='15'>";
+						txt += "청구할 부대비 내역이 없습니다.";
+						txt += "</td></tr>";
+					}
+					else if(cargoBill.length!=0)
 					{
 						for(var i=0; i<cargoBill.length;i++)
 						{	
@@ -166,6 +187,14 @@
 		var form = $("<form></form>");
 		form.attr("method", 'post');
         form.attr("action", '${contextPath}/bill/downloadExcel.do');
+		var input = "";
+		var warehouse_name = $("#select_wh").val();
+		input = $("<input type='hidden' name='warehouse_name' value=" + warehouse_name + ">");
+		form.append(input);
+		var stock_month = $("#select_month").val();
+		input = $("<input type='hidden' name='stock_month' value=" + stock_month + ">");
+		form.append(input);
+
         form.appendTo('body');
         form.submit();
 	}

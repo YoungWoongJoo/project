@@ -44,12 +44,6 @@ public class BillDaoImpl implements BillDao {
 	}
 
 	@Override
-	public Map<String, Object> calc(Map<String, Object> map) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public Map<String, Object> selectLists(Map<String, Object> map) throws DataAccessException {
 		Map<String,Object> listMap = new HashMap<String, Object>();
 		List<MonthlyStockVO> monthlyStockList = sqlSession.selectList("mapper.bill.selectmonthlyStockList", map);

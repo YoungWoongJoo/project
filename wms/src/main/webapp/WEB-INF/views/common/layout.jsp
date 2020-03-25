@@ -10,6 +10,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
+<link href="${contextPath}/resources/css/css.css" rel="stylesheet" type="text/css" media="screen">
 <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 </head>
@@ -19,12 +20,14 @@
 			<tiles:insertAttribute name="header" />
 		</header>
 		<div class="clear"></div>
-		<aside>
-			<tiles:insertAttribute name="side" />
-		</aside>
-		<article>
-			<tiles:insertAttribute name="body" />
-		</article>
+		<div id="inner_wrap">
+			<aside>
+				<tiles:insertAttribute name="side" />
+			</aside>
+			<article>
+				<tiles:insertAttribute name="body" />
+			</article>
+		</div>
 		<div class="clear"></div>
 		<footer>
 			<tiles:insertAttribute name="footer" />
