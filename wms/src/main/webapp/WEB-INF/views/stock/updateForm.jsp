@@ -33,7 +33,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         }
         $("#sort_detail").append(str);
 
-        $("input[name='stock_sort1']").change(function() {
+        $("input[name='stock_sort1']").click(function() {
           var text = "";
           $("#sort_detail").empty();
           if (this.value == "현미") {
@@ -97,6 +97,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="submit" value="등록하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>

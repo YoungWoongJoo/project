@@ -12,7 +12,6 @@ public class StockVO {
 	private String stock_unit;
 	private String stock_quantity_40kg;
 	private String stock_quantity_bag;
-	private String stock_state;
 	
 	public int getStock_seq_num() {
 		return stock_seq_num;
@@ -62,11 +61,5 @@ public class StockVO {
 	}
 	public void setStock_quantity_bag(String stock_quantity_bag) {
 		this.stock_quantity_bag = stock_quantity_bag;
-	}
-	public String getStock_state() {
-		return stock_state;
-	}
-	public void setStock_state(String stock_state) {
-		this.stock_state = stock_state;
 	}
 }

@@ -45,4 +45,8 @@
 						where member_id = #{member_id}
 	</update>
 	
+	<select id="getUserById" resultType="memberVO" parameterType="String">
+		select * from t_member where member_id=#{member_id}
+	</select>
+	
 </mapper>

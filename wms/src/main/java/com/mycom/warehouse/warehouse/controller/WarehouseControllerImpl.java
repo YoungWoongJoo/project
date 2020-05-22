@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -40,22 +41,32 @@ public class WarehouseControllerImpl extends BaseController implements Warehouse
 		ResponseEntity<String> resEntity = null;
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-		memberVO = (MemberVO)session.getAttribute("memberVO");
-		String member_id = memberVO.getMember_id();
-		warehouseVO.setMember_id(member_id);
-		try {
-			warehouseService.register(warehouseVO);
+		if(warehouseService.searchWarehouse(warehouseVO.getWarehouse_name())!=null)
+		{
 			msg  = "<script>";
-			msg +=" alert('창고 등록을 완료했습니다. 마이페이지로 이동합니다.');";
-			msg += " location.href='"+request.getContextPath()+"/mypage/main.do';";
-			msg += " </script>";
-		}
-		catch(Exception e) {
-			msg  = "<script>";
-			msg +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
+			msg +=" alert('"+warehouseVO.getWarehouse_name()+"는 이미 등록된 창고입니다.\');";
 			msg += " history.back();";
 			msg += " </script>";
-			e.printStackTrace();
+		}
+		else
+		{
+			memberVO = (MemberVO)session.getAttribute("memberVO");
+			String member_id = memberVO.getMember_id();
+			warehouseVO.setMember_id(member_id);
+			try {
+				warehouseService.register(warehouseVO);
+				msg  = "<script>";
+				msg +=" alert('창고 등록을 완료했습니다. 마이페이지로 이동합니다.');";
+				msg += " location.href='"+request.getContextPath()+"/mypage/main.do';";
+				msg += " </script>";
+			}
+			catch(Exception e) {
+				msg  = "<script>";
+				msg +=" alert('작업 중 오류가 발생했습니다. 다시 시도해 주세요');";
+				msg += " history.back();";
+				msg += " </script>";
+				e.printStackTrace();
+			}
 		}
 		resEntity =new ResponseEntity<String>(msg, responseHeaders, HttpStatus.OK);
 		return resEntity;
@@ -98,7 +109,7 @@ public class WarehouseControllerImpl extends BaseController implements Warehouse
 	@Override
 	@ResponseBody
 	@RequestMapping(value="/searchWarehouse.do")
-	public WarehouseVO searchWarehouse(String warehouse_name, HttpServletRequest request, HttpServletResponse response)
+	public WarehouseVO searchWarehouse(@RequestParam("warehouse_name")String warehouse_name, HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		warehouseVO = warehouseService.searchWarehouse(warehouse_name);
 		return warehouseVO;

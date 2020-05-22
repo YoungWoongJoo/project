@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,10 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 	MemberService memberService;
 	@Autowired
 	MemberVO memberVO;
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
 	
+	/*
 	@Override
 	@RequestMapping(value="/login.do" ,method = RequestMethod.POST)
 	public ResponseEntity<String> login(@RequestParam Map<String, String> loginMap, HttpServletRequest request, HttpServletResponse response)
@@ -71,6 +75,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		mav.setViewName("redirect:/main.do");
 		return mav;
 	}
+	*/
 
 	@Override
 	@RequestMapping(value="/addMember.do", method = RequestMethod.POST)
@@ -81,6 +86,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 		try {
+			memberVO.setMember_pw(passwordEncoder.encode(memberVO.getMember_pw()));
 		    memberService.addMember(memberVO);
 		    message  = "<script>";
 		    message +=" alert('회원 가입을 마쳤습니다.로그인창으로 이동합니다.');";
@@ -104,6 +110,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 			throws Exception {
 		ResponseEntity<String> resEntity = null;
 		String result = memberService.checkID(member_id);
+		System.out.println("result : "+result);
 		resEntity = new ResponseEntity<String>(result, HttpStatus.OK);
 		return resEntity;
 	}
@@ -117,6 +124,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 		try {
+			memberVO.setMember_pw(passwordEncoder.encode(memberVO.getMember_pw()));
 		    memberService.updateMember(memberVO);
 		    HttpSession session = request.getSession();
 		    session.removeAttribute("memberVO");

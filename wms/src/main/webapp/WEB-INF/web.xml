@@ -2,7 +2,10 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-
+	
+	<!-- The definition of the Root Spring Container shared by all Servlets 
+		and Filters -->
+	
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>
@@ -17,17 +20,27 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
-	<!-- The definition of the Root Spring Container shared by all Servlets 
-		and Filters -->
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/spring/mybatis-context.xml</param-value>
-	</context-param>
+	
+	<!--Spring Security--> 
+	<filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+	
+	<!-- 중복 로그인 처리 리스너 -->
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher
 		</listener-class>
 	</listener>
 
@@ -48,5 +61,13 @@
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring/security-context.xml
+			/WEB-INF/spring/mybatis-context.xml
+		</param-value>
+	</context-param>
 
 </web-app>

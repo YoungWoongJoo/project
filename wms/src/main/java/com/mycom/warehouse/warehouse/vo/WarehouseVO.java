@@ -9,7 +9,9 @@ public class WarehouseVO {
 	private String warehouse_code;
 	private String warehouse_region;
 	private String warehouse_rating;
+	private String warehouse_region_name;
 	private String member_id;
+	
 	public String getWarehouse_name() {
 		return warehouse_name;
 	}
@@ -39,6 +41,12 @@ public class WarehouseVO {
 	}
 	public void setWarehouse_rating(String warehouse_rating) {
 		this.warehouse_rating = warehouse_rating;
+	}
+	public String getWarehouse_region_name() {
+		return warehouse_region_name;
+	}
+	public void setWarehouse_region_name(String warehouse_region_name) {
+		this.warehouse_region_name = warehouse_region_name;
 	}
 	public String getMember_id() {
 		return member_id;

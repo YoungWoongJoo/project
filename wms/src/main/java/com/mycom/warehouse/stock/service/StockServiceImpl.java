@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mycom.warehouse.stock.dao.StockDao;
+import com.mycom.warehouse.stock.vo.MonthlyStockVO;
 import com.mycom.warehouse.stock.vo.StockVO;
 
 @Service("stockService")
@@ -17,9 +18,9 @@ public class StockServiceImpl implements StockService {
 	StockDao stockDao;
 	
 	@Override
-	public void register(StockVO stockVO) throws Exception {
+	public void register(StockVO stockVO, MonthlyStockVO monthlyStockVO) throws Exception {
 
-		stockDao.insertNewStock(stockVO);
+		stockDao.insertNewStock(stockVO, monthlyStockVO);
 	}
 
 	@Override
@@ -48,6 +49,16 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public List<String> keywordSearch(String keyword) throws Exception {
 		return stockDao.keywordSearch(keyword);
+	}
+
+	@Override
+	public StockVO selectStock(StockVO stockVO) throws Exception {
+		return stockDao.selectStock(stockVO);
+	}
+
+	@Override
+	public List<String> selectMonth(String warehouse_name) throws Exception {
+		return stockDao.selectMonth(warehouse_name);
 	}
 
 }

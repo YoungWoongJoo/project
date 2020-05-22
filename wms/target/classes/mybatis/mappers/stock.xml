@@ -14,12 +14,22 @@
 		<result property="stock_unit" column="stock_unit" />
 		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
 		<result property="stock_quantity_bag" column="stock_quantity_bag" />
-		<result property="stock_state" column="stock_state" />
+	</resultMap>
+		
+	<resultMap type="MonthlyStockVO" id="monthlyStockResult">
+		<result property="stock_month" column="stock_month"/>
+		<result property="stock_seq_num" column="stock_seq_num"/>
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="stock_year" column="stock_year" />
+		<result property="stock_sort1" column="stock_sort1" />
+		<result property="stock_sort2" column="stock_sort2" />
+		<result property="stock_unit" column="stock_unit" />
+		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
 	</resultMap>
 	
 	<select id="selectStockList" resultMap="stockResult" parameterType="String">
 		<![CDATA[
-		select * from t_stock where warehouse_name=#{warehouse_name} and stock_quantity_40kg!=0 order by stock_seq_num
+		select * from t_stock where warehouse_name=#{warehouse_name} and stock_quantity_40kg!=0 order by stock_year, stock_sort1, stock_sort2, to_number(stock_unit)
 		]]>
 	</select>
 	
@@ -43,6 +53,26 @@
 							#{stock_unit},
 							#{stock_quantity_40kg},
 							#{stock_quantity_bag})
+	</insert>
+	
+	<insert id="insertNewMonthlyStock" parameterType="monthlyStockVO">
+		insert into t_monthly_stock(stock_month,
+									stock_seq_num,
+									warehouse_name,
+									stock_year,
+									stock_sort1,
+									stock_sort2,
+									stock_unit,
+									stock_quantity_40kg
+									)
+							values(#{stock_month},
+									#{stock_seq_num},
+									#{warehouse_name},
+									#{stock_year},
+									#{stock_sort1},
+									#{stock_sort2},
+									#{stock_unit},
+									#{stock_quantity_40kg})
 	</insert>
 	
 	<update id="updateStock" parameterType="stockVO">
@@ -70,6 +100,21 @@
         where         
         stock_sort2 like '%'|| #{keyword} || '%'
 		]]>
+	</select>
+	
+	<select id="selectStock" resultMap="stockResult" parameterType="stockVO">
+		select * from t_stock where warehouse_name = #{warehouse_name} and
+									stock_year = #{stock_year} and
+									stock_sort1 = #{stock_sort1} and
+									stock_sort2 = #{stock_sort2} and
+									stock_unit = #{stock_unit}
+	</select>
+	
+	<select id="selectMonth" resultType="string" parameterType="string">
+	<![CDATA[
+		select distinct to_char(add_months(to_date(stock_month,'yyyy-mm'),1),'yyyy-mm') as month from t_monthly_stock 
+		where warehouse_name=#{warehouse_name} and to_date(stock_month,'yyyy-mm') <= (select last_day(sysdate) from dual) order by month desc
+	]]>
 	</select>
 	
 </mapper>

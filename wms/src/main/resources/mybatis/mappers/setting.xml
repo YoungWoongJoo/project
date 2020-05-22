@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.setting">
+	<!-- 리절트 맵 정의 -->
+	<resultMap type="StorageRateVO" id="storageRateResult">
+		<result property="storage_rate_seq_num" column="storage_rate_seq_num"/>
+		<result property="rate_year" column="rate_year"/>
+		<result property="warehouse_region" column="warehouse_region"/>
+		<result property="warehouse_rating" column="warehouse_rating"/>
+		<result property="white_rice_rate" column="white_rice_rate"/>
+		<result property="brown_rice_rate" column="brown_rice_rate"/>
+		<result property="rice_rate" column="rice_rate"/>
+	</resultMap>
+	
+	<resultMap type="CargoRateVO" id="cargoRateResult">
+		<result property="cargo_rate_seq_num" column="cargo_rate_seq_num"/>
+		<result property="rate_year" column="rate_year"/>
+		<result property="wrap_sort" column="wrap_sort"/>
+		<result property="load_rate" column="load_rate"/>
+		<result property="unload_rate" column="unload_rate"/>
+		<result property="warehousing_rate" column="warehousing_rate"/>
+		<result property="release_rate" column="release_rate"/>
+		<result property="purchase_warehousing_rate" column="purchase_warehousing_rate"/>
+		<result property="purchase_load_rate" column="purchase_load_rate"/>
+		<result property="security_rate" column="security_rate"/>
+		<result property="transfer_rate" column="transfer_rate"/>
+		<result property="migration_20m_rate" column="migration_20m_rate"/>
+		<result property="migration_50m_rate" column="migration_50m_rate"/>
+		<result property="bag_purchase_rate" column="bag_purchase_rate"/>
+	</resultMap>
+	
+	<resultMap id="settingResult" type="SettingVO">
+		<result property="setting_region" column="setting_region" />
+		<result property="setting_chief_rank" column="setting_chief_rank" />
+		<result property="setting_chief_name" column="setting_chief_name" />
+		<result property="setting_manager_rank" column="setting_manager_rank" />
+		<result property="setting_manager_name" column="setting_manager_name" />
+		<result property="setting_officer_email" column="setting_officer_email" />
+	</resultMap>
+	
+	<insert id="addstorageRate" parameterType="java.util.Map">
+		<selectKey resultType="int" keyProperty="storage_rate_seq_num" order="BEFORE">
+			select storage_rate_seq_num.nextval from dual
+		</selectKey>
+		insert into t_storage_rate(storage_rate_seq_num,
+									rate_year,
+									warehouse_region,
+									warehouse_rating,
+									white_rice_rate,
+									brown_rice_rate,
+									rice_rate)
+							values(#{storage_rate_seq_num},
+									#{rate_year},
+									#{warehouse_region},
+									#{warehouse_rating},
+									#{white_rice_rate},
+									#{brown_rice_rate},
+									#{rice_rate})
+	</insert>
+	
+	<update id="updatestorageRate" parameterType="java.util.Map">
+		update t_storage_rate set 	warehouse_region = #{warehouse_region},
+									warehouse_rating = #{warehouse_rating},
+									white_rice_rate = #{white_rice_rate},
+									brown_rice_rate = #{brown_rice_rate},
+									rice_rate = #{rice_rate}
+					where storage_rate_seq_num = #{storage_rate_seq_num}
+	</update>
+	
+	<delete id="deletestorageRate" parameterType="java.util.Map">
+		delete from t_storage_rate where storage_rate_seq_num = #{storage_rate_seq_num}
+	</delete>
+	
+	<insert id="addcargoRate" parameterType="java.util.Map">
+		<selectKey resultType="int" keyProperty="cargo_rate_seq_num" order="BEFORE">
+			select cargo_rate_seq_num.nextval from dual
+		</selectKey>
+		insert into t_cargo_rate(cargo_rate_seq_num,
+									rate_year,
+									wrap_sort,
+									load_rate,
+									unload_rate,
+									warehousing_rate,
+									release_rate,
+									purchase_warehousing_rate,
+									purchase_load_rate,
+									security_rate,
+									transfer_rate,
+									migration_20m_rate,
+									migration_50m_rate,
+									bag_purchase_rate)
+							values(#{cargo_rate_seq_num},
+									#{rate_year},
+									#{wrap_sort},
+									#{load_rate},
+									#{unload_rate},
+									#{warehousing_rate},
+									#{release_rate},
+									#{purchase_warehousing_rate},
+									#{purchase_load_rate},
+									#{security_rate},
+									#{transfer_rate},
+									#{migration_20m_rate},
+									#{migration_50m_rate},
+									#{bag_purchase_rate})
+	</insert>
+	
+	<update id="updatecargoRate" parameterType="java.util.Map">
+		update t_cargo_rate set 	wrap_sort = #{wrap_sort},
+									load_rate = #{load_rate},
+									unload_rate = #{unload_rate},
+									warehousing_rate = #{warehousing_rate},
+									release_rate = #{release_rate},
+									purchase_warehousing_rate = #{purchase_warehousing_rate},
+									purchase_load_rate = #{purchase_load_rate},
+									security_rate = #{security_rate},
+									transfer_rate = #{transfer_rate},
+									migration_20m_rate = #{migration_20m_rate},
+									migration_50m_rate = #{migration_50m_rate},
+									bag_purchase_rate = #{bag_purchase_rate}
+					where cargo_rate_seq_num = #{cargo_rate_seq_num}
+	</update>
+	
+	<delete id="deletecargoRate" parameterType="java.util.Map">
+		delete from t_cargo_rate where cargo_rate_seq_num = #{cargo_rate_seq_num}
+	</delete>
+	
+	<insert id="addsetting" parameterType="java.util.Map">
+		insert into t_setting(setting_region,
+									setting_chief_rank,
+									setting_chief_name,
+									setting_manager_rank,
+									setting_manager_name,
+									setting_officer_email)
+							values(#{setting_region},
+									#{setting_chief_rank},
+									#{setting_chief_name},
+									#{setting_manager_rank},
+									#{setting_manager_name},
+									#{setting_officer_email})
+	</insert>
+	
+	<update id="updatesetting" parameterType="java.util.Map">
+		update t_setting set 	setting_chief_name = #{setting_chief_name},
+									setting_manager_name = #{setting_manager_name},
+									setting_officer_email = #{setting_officer_email}
+					where setting_region = #{setting_region}
+	</update>
+	
+	<delete id="deletesetting" parameterType="java.util.Map">
+		delete from t_setting where setting_region = #{setting_region}
+	</delete>
+	
+	<select id="selectRateYears" resultType="int">
+		select distinct rate_year from t_storage_rate order by rate_year desc
+	</select>
+	
+	<select id="selectStorageRateList" resultMap="storageRateResult">
+		select * from t_storage_rate order by storage_rate_seq_num
+	</select>
+	
+	<select id="selectCargoRateList" resultMap="cargoRateResult">
+		select * from t_cargo_rate order by cargo_rate_seq_num
+	</select>
+	
+	<select id="selectSettingList" resultMap="settingResult">
+		select * from t_setting order by setting_region
+	</select>
+	
+	<select id="searchStorageRate" resultMap="storageRateResult" parameterType="String">
+		select * from t_storage_rate where to_char(storage_rate_seq_num) = #{storage_rate_seq_num}
+	</select>
+	
+	<select id="searchCargoRate" resultMap="cargoRateResult" parameterType="String">
+		select * from t_cargo_rate where to_char(cargo_rate_seq_num) = #{cargo_rate_seq_num}
+	</select>
+	
+	<select id="selectOnestorageRate" resultMap="storageRateResult" parameterType="java.util.Map">
+		select * from t_storage_rate where warehouse_region = #{warehouse_region} and warehouse_rating = #{warehouse_rating}
+	</select>
+	
+	<select id="selectOnecargoRate" resultMap="cargoRateResult" parameterType="java.util.Map">
+		select * from t_cargo_rate where wrap_sort = #{wrap_sort}
+	</select>
+	
+	<select id="selectOnesetting" resultMap="settingResult" parameterType="java.util.Map">
+		select * from t_setting where setting_region = #{setting_region}
+	</select>
+	
+	<select id="searchStorageRateList" resultMap="storageRateResult" parameterType="java.util.Map">
+		select * from t_storage_rate where warehouse_region = #{warehouse_region} and warehouse_rating = #{warehouse_rating} and rate_year = #{rate_year}
+	</select>
+	
+	<select id="searchCargoRateList" resultMap="cargoRateResult" parameterType="java.util.Map">
+		select * from t_cargo_rate where rate_year = #{rate_year} order by cargo_rate_seq_num
+	</select>
+	
+</mapper>

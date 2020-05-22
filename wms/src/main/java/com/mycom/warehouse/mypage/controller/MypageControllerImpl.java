@@ -28,7 +28,6 @@ public class MypageControllerImpl extends BaseController implements MypageContro
 	@RequestMapping(value="/main.do")
 	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session=request.getSession();
-		session=request.getSession();
 		session.setAttribute("side_menu", "my_page"); //마이페이지 사이드 메뉴로 설정한다.
 		
 		String viewName=(String)request.getAttribute("viewName");
