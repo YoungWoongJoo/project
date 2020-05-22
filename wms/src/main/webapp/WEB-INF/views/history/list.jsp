@@ -26,6 +26,10 @@
 				url : "${contextPath}/history/getList.do",
 				dataType : "Text",
 				data : {warehouse_name : warehouse_name, history_date : history_date},
+				beforeSend : function(xhr)
+		          {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+		              xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		          },
 				success: function(data, textStatus) {
 					if (data == "") {
 						alert("에러가 발생했습니다. 다시 시도해주세요.");
@@ -60,15 +64,15 @@
 								+ '<td>'+historyVO[i].history_sort2+'</td>'
 								+ '<td>'+historyVO[i].stock_prev+'</td>'
 								+ '<td>'+historyVO[i].history_quantity+'</td>'
-								+ '<td>'+historyVO[i].stock_present+'</td><td>';
+								+ '<td>'+historyVO[i].stock_present+'</td>';
 								if(historyVO[i].history_state == 'enable')
 							{
-								str += "<input type='button' id='delete_history' value='삭제' onclick='fn_delete(this)'>";
+								str += "<td></td>";
 							}
 							else{
-								str += "불가";
+								str += "<td>불가</td>";
 							}
-							str	+= '</td></tr>';
+							str	+= '</tr>';
 						});
 					} else {
 						str += '<tr><td colspan="10">선택된 창고에 관리 이력이 없습니다.</td></tr>';
@@ -89,7 +93,12 @@
 					alert("에러가 발생했습니다. 다시 시도해주세요.");
 				},
 				complete: function(data, textStatus) {
-					//alert("작업을완료 했습니다");
+					for(var i=1; i<$("#history_table tr").length; i++)
+						{
+						if($("#history_table tr").eq(i).children().eq(11).text()!='불가')
+						$("#history_table tr").eq(i).children().eq(11).append("<input type='button' value='삭제' onclick='fn_delete(this)'>");
+						}
+					
 				}
 		});
 	}
@@ -99,6 +108,8 @@
 		var form = $("<form></form>");
 		var history_seq_num = $("<input type='hidden' name='history_seq_num' value="+tr.children().eq(0).val()+">");
 		form.append(history_seq_num);
+		var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
 		form.attr("method", 'post');
 		form.attr("action", '${contextPath}/history/delete.do');
 		form.appendTo('body');

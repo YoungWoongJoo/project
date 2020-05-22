@@ -18,6 +18,10 @@
 				url : "${contextPath}/stock/getList.do",
 				dataType : "Text",
 				data : {warehouse_name : wh_name},
+				beforeSend : function(xhr)
+		          {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+		              xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		          },
 				success: function(data, textStatus) {
 					var stockVO = JSON.parse(data);
 					var str = '<thead>'
@@ -71,6 +75,8 @@
 		var form = $("<form></form>");
 		var stock_seq_num = $("<input type='hidden' name='stock_seq_num' value="+tr.children().eq(0).val()+">");
 		form.append(stock_seq_num);
+		var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
 		form.attr("method", 'post');
 		form.attr("action", '${contextPath}/stock/updateForm.do');
 		form.appendTo('body');
@@ -82,6 +88,8 @@
 		var form = $("<form></form>");
 		var stock_seq_num = $("<input type='hidden' name='stock_seq_num' value="+tr.children().eq(0).val()+">");
 		form.append(stock_seq_num);
+		var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
 		form.attr("method", 'post');
 		form.attr("action", '${contextPath}/stock/delete.do');
 		form.appendTo('body');

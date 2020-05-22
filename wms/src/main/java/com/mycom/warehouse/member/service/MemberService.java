@@ -2,6 +2,8 @@ package com.mycom.warehouse.member.service;
 
 import java.util.Map;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.mycom.warehouse.member.vo.MemberVO;
 
 public interface MemberService {

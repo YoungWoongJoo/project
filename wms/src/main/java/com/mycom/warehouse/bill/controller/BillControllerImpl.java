@@ -18,22 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Color;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +35,9 @@ import com.mycom.warehouse.common.Controller.BaseController;
 import com.mycom.warehouse.history.vo.HistoryVO;
 import com.mycom.warehouse.member.vo.MemberVO;
 import com.mycom.warehouse.stock.vo.MonthlyStockVO;
+import com.mycom.warehouse.system.service.SystemService;
 import com.mycom.warehouse.system.vo.CargoRateVO;
+import com.mycom.warehouse.system.vo.SettingVO;
 import com.mycom.warehouse.system.vo.StorageRateVO;
 import com.mycom.warehouse.warehouse.service.WarehouseService;
 import com.mycom.warehouse.warehouse.vo.WarehouseVO;
@@ -56,7 +47,7 @@ import com.mycom.warehouse.warehouse.vo.WarehouseVO;
 public class BillControllerImpl extends BaseController implements BillController{
 	private static final int STORAGE_BILL_COLUMN = 13;
 	private static final int CARGO_BILL_COLUMN = 15;
-	private static final int STORAGE_BILL_ROW_START = 10;
+	private static final int STORAGE_BILL_ROW_START = 9;
 	private static final int STORAGE_BILL_COL_START = 2;
 	private static final int CARGO_BILL_ROW_START = 9;
 	private static final int CARGO_BILL_COL_START = 2;
@@ -76,6 +67,10 @@ public class BillControllerImpl extends BaseController implements BillController
 	CargoRateVO cargoRateVO;
 	@Autowired 
 	BillService billService;
+	@Autowired
+	SystemService systemService;
+	@Autowired
+	SettingVO settingVO;
 
 	@Override
 	@RequestMapping(value="/view.do")
@@ -127,9 +122,18 @@ public class BillControllerImpl extends BaseController implements BillController
 		List<String[]> storageBill = calcStorageBill(map, listMap); //보관료청구서 계산
 		Map<String, Object> cargoMap = calcCargoBill(map, listMap); //부대비청구서 계산
 		List<String[]> cargoBill = (List<String[]>) cargoMap.get("cargoBill");
+		List<SettingVO> settingList = systemService.settingList(); 
 		String warehouse_name = (String) map.get("warehouse_name");
 		String stock_month = (String) map.get("stock_month");
 		warehouseVO = warehouseService.searchWarehouse(warehouse_name);
+		String region = warehouseVO.getWarehouse_region_name();
+		Iterator<SettingVO> settingIterator = settingList.iterator();
+		while(settingIterator.hasNext())
+		{
+			settingVO = settingIterator.next();
+			if(region.equals(settingVO.getSetting_region()))
+				break;
+		}
 		
 		File dir = new File(request.getSession().getServletContext().getRealPath("/")+"resources"+File.separator+"billForm"); //엑셀파일 디렉토리위치
 		FileInputStream in = new FileInputStream(dir+File.separator+"보관임양식.xlsx"); //엑셀 파일 읽기
@@ -140,72 +144,138 @@ public class BillControllerImpl extends BaseController implements BillController
 		Cell cell;
 		String value;
 		int cellNum, totalPrice=0;
+		int sheetCnt=0, cnt, rowCnt, remainingBillRow, storageBillSheetCnt = 0, cargoBillSheetCnt = 0;
+		Sheet storageBillSheet = null;
+		Sheet cargoBillSheet = null;
 		
-		if(storageBill!=null)
+		wb.setSheetName(0, warehouse_name);
+		wb.setSheetName(1, warehouse_name+"(부대)");
+		
+		if(storageBill.size()>15)
 		{
-			wb.setSheetName(0, warehouse_name);
-			Sheet storageBillSheet = wb.getSheetAt(0);
-			for(i=0; i<storageBill.size(); i++)
+			storageBillSheetCnt = storageBill.size()/15;
+			if(storageBill.size()%15>0)
+				storageBillSheetCnt++;
+		}
+		else
+			storageBillSheetCnt = 1;
+		if(cargoBill.size()>15)
+		{
+			cargoBillSheetCnt = cargoBill.size()/15;
+			if(cargoBill.size()%15>0)
+				cargoBillSheetCnt++;
+		}
+		else
+			cargoBillSheetCnt = 1;
+		for(i=1; i<storageBillSheetCnt; i++)
+			wb.cloneSheet(0);
+		for(i=1; i<cargoBillSheetCnt; i++)
+			wb.cloneSheet(1);
+		
+		if(storageBill!=null) //보관료내역이 있을경우,
+		{
+			sheetCnt = storageBill.size()/15; //엑셀행 15개 이상의 보관료내역이 있을경우 시트 수 계산
+			if(storageBill.size()%15>0)
+				sheetCnt++;
+			rowCnt = 0;
+			if(storageBill.size()>15)
+				remainingBillRow = 15;
+			else
+				remainingBillRow = storageBill.size();
+			for(cnt=0; cnt<storageBillSheetCnt; cnt++)
 			{
-				row = storageBillSheet.getRow(STORAGE_BILL_ROW_START+i);
+				if(cnt>0)
+					wb.setSheetOrder(warehouse_name+" ("+(cnt+1)+")", cnt);
+				storageBillSheet = wb.getSheetAt(cnt);
 				
-				for(j=0; j<STORAGE_BILL_COLUMN; j++)
+				for(i=rowCnt; i<remainingBillRow; i++)
 				{
-					cellNum = STORAGE_BILL_COL_START+j;
-					if(cellNum>=6)
-						cellNum+=2;
-					if(cellNum==16)
-						cellNum+=1;
-					cell = row.getCell(cellNum);
+					row = storageBillSheet.getRow(STORAGE_BILL_ROW_START+(i%15));
 					
-					if(storageBill.get(i)[j]!=null)
+					for(j=0; j<STORAGE_BILL_COLUMN; j++)
 					{
-						if(j==12)
-							totalPrice +=  Integer.parseInt(storageBill.get(i)[j]);
-						value = storageBill.get(i)[j];
-						value = value.replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
-						cell.setCellValue(value);
+						cellNum = STORAGE_BILL_COL_START+j;
+						if(cellNum>=6)
+							cellNum+=2;
+						if(cellNum==16)
+							cellNum+=1;
+						cell = row.getCell(cellNum);
+						
+						if(storageBill.get(i)[j]!=null)
+						{
+							if(j==12)
+								totalPrice +=  Integer.parseInt(storageBill.get(i)[j]);
+							value = storageBill.get(i)[j];
+							value = value.replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+							cell.setCellValue(value);
+						}
 					}
 				}
+				rowCnt = 15;
+				if(storageBill.size()-remainingBillRow>15)
+					remainingBillRow += 15;
+				else
+					remainingBillRow += storageBill.size()-remainingBillRow;
+				
+				row = storageBillSheet.getRow(24);
+				cell = row.getCell(17);
+				value = Integer.toString(totalPrice).replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+				totalPrice = 0;
+				cell.setCellValue(value); //총합계액
+				
+				setHeader(storageBillSheet, warehouseVO, stock_month, settingVO);
+				setFooter(storageBillSheet, settingVO);
 			}
-			row = storageBillSheet.getRow(25);
-			cell = row.getCell(17);
-			value = Integer.toString(totalPrice).replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
-			cell.setCellValue(value); //총합계액
-			
-			setHeader(storageBillSheet, warehouseVO, stock_month);
-			
 		}
 		totalPrice=0;
 		if(cargoBill.size()!=0)
 		{
-			wb.setSheetName(1, warehouse_name+"(부대)");
-			Sheet cargoBillSheet = wb.getSheetAt(1);
-			for(i=0; i<cargoBill.size(); i++)
+			sheetCnt = cargoBill.size()/15; //엑셀행 15개 이상의 보관료내역이 있을경우 시트 수 계산
+			if(cargoBill.size()%15>0)
+				sheetCnt++;
+			rowCnt = 0;
+			if(cargoBill.size()>15)
+				remainingBillRow = 15;
+			else
+				remainingBillRow = cargoBill.size();
+			for(cnt=0; cnt<cargoBillSheetCnt; cnt++)
 			{
-				row = cargoBillSheet.getRow(CARGO_BILL_ROW_START+i);
+				cargoBillSheet = wb.getSheetAt(cnt+storageBillSheetCnt);
 				
-				for(j=0; j<CARGO_BILL_COLUMN; j++)
+				for(i=rowCnt; i<remainingBillRow; i++)
 				{
-					cellNum = CARGO_BILL_COL_START+j;
-					cell = row.getCell(cellNum);
-					
-					if(cargoBill.get(i)[j]!=null)
+					row = cargoBillSheet.getRow(CARGO_BILL_ROW_START+(i%15));
+				
+					for(j=0; j<CARGO_BILL_COLUMN; j++)
 					{
-						if(j==14)
-							totalPrice +=  Integer.parseInt(cargoBill.get(i)[j]);
-						value = cargoBill.get(i)[j];
-						value = value.replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
-						cell.setCellValue(value);
+						cellNum = CARGO_BILL_COL_START+j;
+						cell = row.getCell(cellNum);
+						
+						if(cargoBill.get(i)[j]!=null)
+						{
+							if(j==14)
+								totalPrice +=  Integer.parseInt(cargoBill.get(i)[j]);
+							value = cargoBill.get(i)[j];
+							value = value.replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+							cell.setCellValue(value);
+						}
 					}
 				}
+				rowCnt = 15;
+				if(cargoBill.size()-remainingBillRow>15)
+					remainingBillRow += 15;
+				else
+					remainingBillRow += cargoBill.size()-remainingBillRow;
+				
+				row = cargoBillSheet.getRow(24);
+				cell = row.getCell(16);
+				value = Integer.toString(totalPrice).replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
+				totalPrice = 0;
+				cell.setCellValue(value); //총합계액
+				
+				setHeader(cargoBillSheet, warehouseVO, stock_month, settingVO);
+				setFooter(cargoBillSheet, settingVO);
 			}
-			row = cargoBillSheet.getRow(24);
-			cell = row.getCell(16);
-			value = Integer.toString(totalPrice).replaceAll("\\B(?=(\\d{3})+(?!\\d))", ",");
-			cell.setCellValue(value); //총합계액
-			
-			setHeader(cargoBillSheet, warehouseVO, stock_month);
 		}
 		else
 		{
@@ -215,7 +285,7 @@ public class BillControllerImpl extends BaseController implements BillController
 		String[] date = stock_month.split("-");
 		
 		String userAgent = request.getHeader("User-Agent");
-		boolean ie = (userAgent.indexOf("MSIE") > -1) || (userAgent.indexOf("Trident") > -1);
+		boolean ie = (userAgent.indexOf("MSIE") > -1) || (userAgent.indexOf("Trident") > -1) || (userAgent.indexOf("Edge") > -1);
 		String fileName = "보관임청구서("+date[0].substring(2)+"년"+date[1]+"월"+")-"+warehouse_name.split("창고")[0]+".xlsx";
 		if (ie) {
 		        fileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
@@ -229,11 +299,12 @@ public class BillControllerImpl extends BaseController implements BillController
 		response.getOutputStream().close();
 	}
 	
-	private void setHeader(Sheet sheet, WarehouseVO warehouseVO, String stock_month)
+	private void setHeader(Sheet sheet, WarehouseVO warehouseVO, String stock_month, SettingVO settingVO)
 	{
 		Row row = null;
 		Cell cell = null;
 		
+		//제목
 		row = sheet.getRow(1);
 		cell = row.getCell(8);
 		String month = stock_month.split("-")[1];
@@ -241,12 +312,18 @@ public class BillControllerImpl extends BaseController implements BillController
 		cell.setCellValue(month+value);
 		
 		row = sheet.getRow(4);
+		cell = row.getCell(1);
+		cell.setCellValue(settingVO.getSetting_chief_rank()+"        귀하");
+		
+		//창고명, 창고주명
+		row = sheet.getRow(4);
 		cell = row.getCell(15);
 		cell.setCellValue(warehouseVO.getWarehouse_name());
 		row = sheet.getRow(5);
 		cell = row.getCell(15);
 		cell.setCellValue(warehouseVO.getWarehouse_owner());
 		
+		//창고명,코드명,등급순위
 		row = sheet.getRow(5);
 		cell = row.getCell(20);
 		cell.setCellValue(warehouseVO.getWarehouse_name());
@@ -254,6 +331,39 @@ public class BillControllerImpl extends BaseController implements BillController
 		cell.setCellValue(warehouseVO.getWarehouse_code());
 		cell = row.getCell(22);
 		cell.setCellValue(warehouseVO.getWarehouse_region()+warehouseVO.getWarehouse_rating());
+	}
+	
+	private void setFooter(Sheet sheet, SettingVO settingVO)
+	{
+		Row row = null;
+		Cell cell = null;
+		String str = null;
+		StringBuffer sb = null;
+		
+		row = sheet.getRow(28);
+		cell = row.getCell(12);
+		cell.setCellValue(settingVO.getSetting_chief_rank());
+		cell = row.getCell(14);
+		str = settingVO.getSetting_chief_name();
+		sb = new StringBuffer(str);
+		sb.insert(0, "   ");
+		sb.insert(4, "   ");
+		sb.insert(8, "   ");
+		sb.insert(12, "   (인)");
+		str = sb.toString();
+		cell.setCellValue(str);
+		row = sheet.getRow(29);
+		cell = row.getCell(12);
+		cell.setCellValue(settingVO.getSetting_manager_rank());
+		cell = row.getCell(14);
+		str = settingVO.getSetting_manager_name();
+		sb = new StringBuffer(str);
+		sb.insert(0, "   ");
+		sb.insert(4, "   ");
+		sb.insert(8, "   ");
+		sb.insert(12, "   (인)");
+		str = sb.toString();
+		cell.setCellValue(str);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -286,6 +396,7 @@ public class BillControllerImpl extends BaseController implements BillController
 			historyCnt = 0;
 			emptyStock = false;
 			totalJuksu = 0;
+			prevWorkDay = null;
 			for(int i=0;i<historyList.size();i++)//관리내역이 있는 재고가 있는지 체크
 			{
 				historyVO = historyList.get(i);
@@ -319,7 +430,10 @@ public class BillControllerImpl extends BaseController implements BillController
 						if(historyCnt>1) //해당 재고의 두번째이상 작업일 경우,
 						{
 							prevWorkDay = historyList.get(i-1).getHistory_date().substring(8);
-							startDay = Integer.parseInt(prevWorkDay)+1; //이전작업일다음날이 보관시작일
+							if(prevWorkDay.equals(historyVO.getHistory_date().substring(8)))
+								startDay = Integer.parseInt(prevWorkDay);
+							else
+								startDay = Integer.parseInt(prevWorkDay)+1; //이전작업일다음날이 보관시작일
 						}
 						else//기존에 있던 재고가 추가로 입고되거나 출고된 경우,
 						{
@@ -328,8 +442,16 @@ public class BillControllerImpl extends BaseController implements BillController
 						workDay = historyVO.getHistory_date().substring(8);
 						endDay =  Integer.parseInt(workDay);
 					}
-					storageTerm = Integer.toString(startDay)+" - "+Integer.toString(endDay); //보관기간
-					storageCnt = endDay-startDay+1;//보관일수
+					if(prevWorkDay!=null&&prevWorkDay.equals(workDay))
+					{
+						storageTerm = Integer.toString(startDay);
+						storageCnt = 0;
+					}
+					else
+					{
+						storageTerm = Integer.toString(startDay)+" - "+Integer.toString(endDay); //보관기간
+						storageCnt = endDay-startDay+1;//보관일수
+					}
 															
 					//보관기간, 보관일수 계산끝
 					
@@ -532,12 +654,18 @@ public class BillControllerImpl extends BaseController implements BillController
 				cargoBillRow[1] = historyVO.getStock_sort2()+historyVO.getStock_sort1();
 				cargoBillRow[2] = historyVO.getStock_unit();
 				cargoBillRow[3] = history_date;
-				cargoBillRow[12] = calcBigDecimal(historyVO.getHistory_quantity(), stock_unit, "multiplication");
+				if(historyVO.getStock_sort1().equals("쌀"))
+					cargoBillRow[12] = calcBigDecimal(historyVO.getHistory_quantity(), historyVO.getStock_unit(), "multiplication");
+				else
+					cargoBillRow[12] = calcBigDecimal(historyVO.getHistory_quantity(), "40", "multiplication");
 				calcCargoBillRowPrice(cargoBillRow, historyVO.getHistory_quantity(), cargo_sort[i], cargoRateList);
 				if(cargoBillRow[13]==null&&cargoBillRow[14]==null)
 				{
-					cargoBillError = "보관료 요율이 없습니다. 보관료 요율을 확인해주세요.";
-					map.put("cargoBillError", cargoBillError);
+					if(cargoBillError==null)
+					{
+						cargoBillError = "하역료 요율이 없습니다. 하역료 요율을 확인해주세요.";
+						map.put("cargoBillError", cargoBillError);
+					}
 					return map;
 				}
 				cargoBill.add(cargoBillRow);
@@ -654,11 +782,11 @@ public class BillControllerImpl extends BaseController implements BillController
 					rate = cargoRateVO.getRelease_rate();
 					break;
 				case "상차":
-					row[7] = quantity;
+					row[8] = quantity;
 					rate = cargoRateVO.getLoad_rate();
 					break;
 				case "하차":
-					row[8] = quantity;
+					row[7] = quantity;
 					rate = cargoRateVO.getUnload_rate();
 					break;
 				case "직송상차료":
@@ -679,13 +807,17 @@ public class BillControllerImpl extends BaseController implements BillController
 						rate = cargoRateVO.getTransfer_rate();
 					else if(cargo_sort.contains("이송"))
 					{
-						if(cargo_sort.equals("이송20m"))
-							rate = cargoRateVO.getMigration_20m_rate();
-						else
+						rate = cargoRateVO.getMigration_20m_rate();
+						rate = calcBigDecimal(rate, "0.5", "multiplication");
+						
+						if(!cargo_sort.equals("이송20m")) //50m초과 20m마다
 						{
-							String distance = cargo_sort.substring(2,4);
-							int cnt = Integer.parseInt(distance)/20;
-							rate = calcBigDecimal(cargoRateVO.getMigration_50m_rate(), Integer.toString(cnt), "multiplication");
+							int distance = Integer.parseInt(cargo_sort.substring(2,4));
+							distance = distance - 50;
+							int cnt = distance/20;
+							String rate1 = calcBigDecimal(cargoRateVO.getMigration_50m_rate(), Integer.toString(cnt), "multiplication");
+							String sumRate = Integer.toString(Integer.parseInt(rate)+Integer.parseInt(rate1));
+							rate = calcBigDecimal(sumRate, "0.5", "multiplication");
 						}
 					}
 				}

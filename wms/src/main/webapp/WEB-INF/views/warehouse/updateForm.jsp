@@ -51,6 +51,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
             url: "${contextPath}/warehouse/searchWarehouse.do",
             dataType: "Text",
             data: { warehouse_name: warehouse_name },
+            beforeSend : function(xhr)
+            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
             success: function(data) {
               var warehouseVO = JSON.parse(data)
               $("#select_wh").val(warehouseVO.warehouse_name)
@@ -121,6 +125,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="submit" id="btn_submit" value="수정하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>

@@ -52,6 +52,7 @@
 	    <mvc:mapping path="/*/*/*.do"/> 
 	      <beans:bean class="com.mycom.warehouse.common.interceptor.ViewNameInterceptor" />
 	  </mvc:interceptor>
+	  <!-- 
 	  <mvc:interceptor>
 	  	<mvc:mapping path="/warehouse/*.do"/>
 	  	<mvc:mapping path="/history/*.do"/>
@@ -61,6 +62,7 @@
 	  	<mvc:mapping path="/bill/*.do"/>
 	  	<beans:bean class="com.mycom.warehouse.common.interceptor.LoginCheckInterceptor" />	  	
 	  </mvc:interceptor>
+	   -->
 	 </mvc:interceptors>
 
 	<!-- 멀티파트 리졸버 -->

@@ -3,23 +3,21 @@
     isELIgnored="false"
     %>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>    
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath"  value="${pageContext.request.contextPath}"  />
 	
 <nav>
+	<sec:authorize access="isAnonymous()">
+	<h1>로그인이 필요합니다.</h1>
+	</sec:authorize>
+	<sec:authorize access="isAuthenticated()">
     <h1>창고관리</h1>
 	<ul>
 		<li><a href="${contextPath}/history/register.do">재고 관리</a></li>
 		<li><a href="${contextPath}/stock/list.do">재고 현황</a></li>
 		<li><a href="${contextPath}/history/list.do">재고 관리 내역</a></li>
 		<li><a href="${contextPath}/bill/view.do">보관임/부대비 청구서</a></li>
-	</ul>
-	<h1>시스템 설정</h1>
-	<ul>
-		<li><a href="${contextPath}/system/rate/register.do">요율 설정</a></li>
-		<li><a href="${contextPath}/system/rate/list.do">요율 설정 확인</a></li>
-		<li><a href="${contextPath}/system/setting/register.do">시스템 설정</a></li>
-		<li><a href="${contextPath}/system/setting/list.do">시스템 설정 확인</a></li>
 	</ul>
 	<h1>마이페이지</h1>
 	<ul>
@@ -30,6 +28,17 @@
 		<li><a href="${contextPath}/stock/register.do">재고 등록</a></li>
 		<li><a href="${contextPath}/stock/list.do">재고 현황</a></li>
 	</ul>
+	</sec:authorize>
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+	<h1>시스템 설정</h1>
+	<ul>
+		<li><a href="${contextPath}/system/rate/register.do">요율 설정</a></li>
+		<li><a href="${contextPath}/system/rate/list.do">요율 설정 확인</a></li>
+		<li><a href="${contextPath}/system/setting/register.do">시스템 설정</a></li>
+		<li><a href="${contextPath}/system/setting/list.do">시스템 설정 확인</a></li>
+	</ul>
+	</sec:authorize>
+	
 </nav>
 
 </html>

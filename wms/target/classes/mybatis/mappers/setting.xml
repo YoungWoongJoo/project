@@ -34,7 +34,9 @@
 	
 	<resultMap id="settingResult" type="SettingVO">
 		<result property="setting_region" column="setting_region" />
+		<result property="setting_chief_rank" column="setting_chief_rank" />
 		<result property="setting_chief_name" column="setting_chief_name" />
+		<result property="setting_manager_rank" column="setting_manager_rank" />
 		<result property="setting_manager_name" column="setting_manager_name" />
 		<result property="setting_officer_email" column="setting_officer_email" />
 	</resultMap>
@@ -128,11 +130,15 @@
 	
 	<insert id="addsetting" parameterType="java.util.Map">
 		insert into t_setting(setting_region,
+									setting_chief_rank,
 									setting_chief_name,
+									setting_manager_rank,
 									setting_manager_name,
 									setting_officer_email)
 							values(#{setting_region},
+									#{setting_chief_rank},
 									#{setting_chief_name},
+									#{setting_manager_rank},
 									#{setting_manager_name},
 									#{setting_officer_email})
 	</insert>

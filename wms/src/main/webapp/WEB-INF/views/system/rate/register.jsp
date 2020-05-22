@@ -111,6 +111,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="submit" id="btn_submit" value="등록하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </div>
 
@@ -159,6 +160,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="submit" value="등록하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </div>
   </body>

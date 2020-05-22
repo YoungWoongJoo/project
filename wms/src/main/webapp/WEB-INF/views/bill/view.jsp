@@ -22,6 +22,10 @@
             url: "${contextPath}/stock/selectMonth.do",
             dataType: "Text",
             data: { warehouse_name: warehouse_name },
+            beforeSend : function(xhr)
+            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
             success: function(data) {
               var stock_month = JSON.parse(data)
 			  $("select[name='stock_month']").empty();
@@ -71,6 +75,10 @@
 				url : "${contextPath}/bill/calc.do",
 				data : {warehouse_name : warehouse_name, stock_month : stock_month},
 				dataType : "text",
+				beforeSend : function(xhr)
+	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	            },
 				success : function(data){
 					var map = JSON.parse(data);
 					var storageBill = map.storageBill;
@@ -90,7 +98,14 @@
 							txt += "<tr>";
 							for(var j=0; j<13; j++)
 							{
-								txt += "<td>";
+								if(j<5)
+								{
+									txt += "<td>";
+								}
+								else
+								{
+									txt += "<td style='text-align: right'>";
+								}
 								if(storageBill[i][j]!=null)
 								{
 									var num = "";
@@ -125,7 +140,7 @@
 					if(cargoBillError!=null)
 					{
 						txt += "<tr><td colspan='15'>";
-						txt += storageBillError;
+						txt += cargoBillError;
 						txt += "</td></tr>";
 					}
 					else if(cargoBill.length==0&&cargoBillError==null)
@@ -141,7 +156,14 @@
 							txt += "<tr>";
 							for(var j=0; j<15; j++)
 							{
-								txt += "<td>";
+								if(j<4)
+								{
+									txt += "<td>";
+								}
+								else
+								{
+									txt += "<td style='text-align: right'>";
+								}
 								if(cargoBill[i][j]!=null)
 								{
 									var num = "";
@@ -193,6 +215,8 @@
 		form.append(input);
 		var stock_month = $("#select_month").val();
 		input = $("<input type='hidden' name='stock_month' value=" + stock_month + ">");
+		form.append(input);
+		input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
 		form.append(input);
 
         form.appendTo('body');
@@ -261,8 +285,8 @@
 					<th>수매장소입고료</th>
 					<th>입고량</th>
 					<th>출고량</th>
-					<th>상차량</th>
 					<th>하차량</th>
+					<th>상차량</th>
 					<th>수매장소상차량</th>
 					<th>수매경비료</th>
 					<th>톤백매입료</th>

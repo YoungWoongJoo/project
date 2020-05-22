@@ -116,7 +116,7 @@
 		select * from t_history 
 								where history_date like #{history_date} || '%'
 								and warehouse_name = #{warehouse_name}
-								order by history_date
+								order by history_date, stock_year, stock_sort1, stock_sort2, to_number(stock_unit), history_seq_num
 	]]>
 	</select>
 	

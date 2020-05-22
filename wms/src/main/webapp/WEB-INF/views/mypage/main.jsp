@@ -19,6 +19,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         var name = $("<input type='hidden' name='warehouse_name' value=" + td.eq(2).text() + ">");
 
         form.append(name);
+        var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
         form.attr("method", 'post');
         form.attr("action", "${contextPath}/warehouse/deleteWarehouse.do");
         form.appendTo('body');
@@ -50,6 +52,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         form.append(region);
         form.append(rating);
         form.append(region_name);
+        var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
         form.attr("method", 'POST');
         form.attr("action", "${contextPath}/warehouse/updateForm.do");
         form.appendTo('body');
@@ -72,6 +76,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         var name = $("<input type='hidden' name='warehouse_name' value=" + td.eq(2).text() + ">");
 
         form.append(name);
+        var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
         form.attr("method", 'POST');
         form.attr("action", "${contextPath}/stock/register.do");
         form.appendTo('body');
@@ -109,7 +115,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     <c:choose>
       <c:when test="${empty warehouseList}">
         <tr>
-          <td colspan="6">등록된 창고가 없습니다. 아래에서 창고를 등록해주세요.</td>
+          <td colspan="7">등록된 창고가 없습니다. 아래에서 창고를 등록해주세요.</td>
         </tr>
       </c:when>
       <c:otherwise>

@@ -95,6 +95,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="button" value="수정하기" onclick="fn_submit()" />
         <input type="reset" value="리셋하기" onclick="fn_reset()" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>

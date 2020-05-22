@@ -33,10 +33,13 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         }
         $.ajax({
           type: "post",
-          async: true,
           url: "${contextPath}/member/checkId.do",
           dataType: "Text",
           data: { id: member_id },
+          beforeSend : function(xhr)
+          {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+              xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+          },
           success: function(data, textStatus) {
             if (data == "false") {
               loginCheck = "true";
@@ -140,6 +143,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="button" value="가입하기" onclick="fn_submit()" />
         <input type="reset" value="리셋하기" onclick="fn_reset()" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>

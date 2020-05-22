@@ -79,8 +79,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
                     tab_tr.eq(tr+2).children().eq(td).text("${storageRateVO.rice_rate}");
                     $(tab_tf).children().eq(0).children().eq(td).append("<input type='button' id='btn_update' value='수정' onclick='fn_storage_update(${storageRateVO.storage_rate_seq_num})'>");
                     $(tab_tf).children().eq(1).children().eq(td).append("<input type='button' id='btn_update' value='삭제' onclick='fn_storage_delete(${storageRateVO.storage_rate_seq_num})'>");
-                  </c:forEach>
                 }
+              </c:forEach>
               
             <c:forEach var="cargoRateVO" items="${cargoRateList}">
             if(${cargoRateVO.rate_year}==rate_year)
@@ -162,6 +162,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
             {
               var form = $("<form></form>");
               form.append(obj);
+              var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+      		form.append(input);
               form.attr("method", 'post');
               form.attr("action", '${contextPath}/system/rate/updateForm.do');
               form.appendTo('body');
@@ -172,6 +174,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
               var form = $("<form></form>");
               var storage_rate_seq_num = $("<input type='hidden' name='storage_rate_seq_num' value="+obj+">");
               form.append(storage_rate_seq_num);
+              var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+      		form.append(input);
               form.attr("method", 'post');
               form.attr("action", '${contextPath}/system/storageRate/delete.do');
               form.appendTo('body');
@@ -182,6 +186,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
               var form = $("<form></form>");
               var cargo_rate_seq_num = $("<input type='hidden' name='cargo_rate_seq_num' value="+obj+">");
               form.append(cargo_rate_seq_num);
+              var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+      		form.append(input);
               form.attr("method", 'post');
               form.attr("action", '${contextPath}/system/cargoRate/delete.do');
               form.appendTo('body');
@@ -216,15 +222,15 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <tbody>
           <tr>
             <td>쌀</td>
-            <c:forEach begin="1" end="15"><td></td></c:forEach>
+            <c:forEach begin="1" end="15"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
             <td>현미</td>
-            <c:forEach begin="1" end="15"><td></td></c:forEach>
+            <c:forEach begin="1" end="15"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
             <td>벼</td>
-            <c:forEach begin="1" end="15"><td></td></c:forEach>
+            <c:forEach begin="1" end="15"><td style='text-align: right'></td></c:forEach>
           </tr>
         </tbody>
         <tfoot>
@@ -251,15 +257,15 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <tbody>
           <tr>
             <td>쌀</td>
-            <c:forEach begin="1" end="3"><td></td></c:forEach>
+            <c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
             <td>현미</td>
-            <c:forEach begin="1" end="3"><td></td></c:forEach>
+            <c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
             <td>벼</td>
-            <c:forEach begin="1" end="3"><td></td></c:forEach>
+            <c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
         </tbody>
         <tfoot>
@@ -285,34 +291,34 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         </thead>
         <tbody>
           <tr>
-            <td>상차료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>상차료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>하차료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>하차료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>입고료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>입고료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>출고료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>출고료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>매입장소입고료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>매입장소입고료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>매입직송상차료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>매입직송상차료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>매입장소경비료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>매입장소경비료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>이적료</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>이적료</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>이송료20m~50m</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>이송료20m~50m</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
           <tr>
-            <td>이송료50m~</td><c:forEach begin="1" end="3"><td></td></c:forEach>
+            <td>이송료50m~</td><c:forEach begin="1" end="3"><td style='text-align: right'></td></c:forEach>
           </tr>
         </tbody>
         <tfoot>
@@ -333,37 +339,37 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         </thead>
         <tbody>
           <tr>
-            <td>톤백 매입료</td><td></td>
+            <td>톤백 매입료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 매입장소입고료</td><td></td>
+            <td>톤백 매입장소입고료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 매입직송상차료</td><td></td>
+            <td>톤백 매입직송상차료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 상차료</td><td></td>
+            <td>톤백 상차료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 하차료</td><td></td>
+            <td>톤백 하차료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 입고료</td><td></td>
+            <td>톤백 입고료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 출고료</td><td></td>
+            <td>톤백 출고료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 매입장소경비료</td><td></td>
+            <td>톤백 매입장소경비료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 이적료</td><td></td>
+            <td>톤백 이적료</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 이송료20m~50m</td><td></td>
+            <td>톤백 이송료20m~50m</td><td style='text-align: right'></td>
           </tr>
           <tr>
-            <td>톤백 이송료50m~</td><td></td>
+            <td>톤백 이송료50m~</td><td style='text-align: right'></td>
           </tr>
         </tbody>
         <tfoot>

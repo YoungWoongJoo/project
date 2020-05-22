@@ -12,7 +12,7 @@ import com.mycom.warehouse.member.vo.MemberVO;
 
 @Service("memberService")
 @Transactional(propagation=Propagation.REQUIRED)
-public class MemberServiceImple implements MemberService{
+public class MemberServiceImpl implements MemberService{
 	@Autowired
 	MemberDao memberDao;
 

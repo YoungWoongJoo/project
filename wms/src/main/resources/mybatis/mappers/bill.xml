@@ -105,7 +105,7 @@
 		select * from t_history 
 								where history_date like #{stock_month} || '%'
 								and warehouse_name = #{warehouse_name}
-								order by stock_year,stock_sort1,stock_sort2,to_number(stock_unit), to_date(history_date,'yyyy-mm-dd')
+								order by stock_year,stock_sort1,stock_sort2,to_number(stock_unit), to_date(history_date,'yyyy-mm-dd'), history_seq_num
 	</select>
 	
 </mapper>
