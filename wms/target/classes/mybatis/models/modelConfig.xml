@@ -7,6 +7,7 @@
     <typeAlias type="com.mycom.warehouse.member.vo.MemberVO" alias="memberVO" />    
     <typeAlias type="com.mycom.warehouse.warehouse.vo.WarehouseVO" alias="warehouseVO" />
     <typeAlias type="com.mycom.warehouse.stock.vo.StockVO" alias="stockVO" />    
+    <typeAlias type="com.mycom.warehouse.stock.vo.MonthlyStockVO" alias="monthlyStockVO" />    
     <typeAlias type="com.mycom.warehouse.history.vo.HistoryVO" alias="historyVO" />    
     <typeAlias type="com.mycom.warehouse.system.vo.CargoRateVO" alias="cargoRateVO" />    
     <typeAlias type="com.mycom.warehouse.system.vo.StorageRateVO" alias="storageRateVO" />    

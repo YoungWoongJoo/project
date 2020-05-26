@@ -19,6 +19,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         var name = $("<input type='hidden' name='warehouse_name' value=" + td.eq(2).text() + ">");
 
         form.append(name);
+        var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
         form.attr("method", 'post');
         form.attr("action", "${contextPath}/warehouse/deleteWarehouse.do");
         form.appendTo('body');
@@ -50,6 +52,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         form.append(region);
         form.append(rating);
         form.append(region_name);
+        var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
         form.attr("method", 'POST');
         form.attr("action", "${contextPath}/warehouse/updateForm.do");
         form.appendTo('body');
@@ -72,6 +76,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         var name = $("<input type='hidden' name='warehouse_name' value=" + td.eq(2).text() + ">");
 
         form.append(name);
+        var input = $("<input type='hidden' name='${_csrf.parameterName}' value='${_csrf.token}'/>");
+		form.append(input);
         form.attr("method", 'POST');
         form.attr("action", "${contextPath}/stock/register.do");
         form.appendTo('body');
@@ -89,23 +95,14 @@ uri="http://java.sun.com/jsp/jstl/core"%>
 </head>
 
 <body>
-  <h1>마이 페이지</h1>
-  <ul>
-    <li><a href="${contextPath}/mypage/updateForm.do">회원 정보 수정</a></li>
-    <li><a href="${contextPath}/warehouse/register.do">창고 등록</a></li>
-    <li><a href="${contextPath}/warehouse/updateForm.do">창고 수정</a></li>
-    <li><a href="${contextPath}/stock/register.do">재고 등록</a></li>
-    <li><a href="${contextPath}/stock/list.do">재고 현황</a></li>
-  </ul>
-  <p></p>
   <h1>회원 정보</h1>
   이메일 : ${memberVO.member_email}
   <p></p>
   <input type="button" value="회원정보 수정" onclick="location.href='${contextPath}/mypage/updateForm.do'">
-  <p></p>
+  <br><br>
   <h1>내 창고 목록</h1>
   <p></p>
-  <table border="1">
+  <table>
     <thead>
       <th>선택</th>
       <th>소재지</th>
@@ -118,7 +115,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     <c:choose>
       <c:when test="${empty warehouseList}">
         <tr>
-          <td colspan="6">등록된 창고가 없습니다. 아래에서 창고를 등록해주세요.</td>
+          <td colspan="7">등록된 창고가 없습니다. 아래에서 창고를 등록해주세요.</td>
         </tr>
       </c:when>
       <c:otherwise>

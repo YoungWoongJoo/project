@@ -5,12 +5,13 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import com.mycom.warehouse.member.vo.MemberVO;
 
 @Repository("memberDao")
-public class MemberDaoImple implements MemberDao {
+public class MemberDaoImpl implements MemberDao {
 	@Autowired
 	private SqlSession sqlSession;
 
@@ -34,6 +35,11 @@ public class MemberDaoImple implements MemberDao {
 	@Override
 	public void updateMember(MemberVO memberVO) throws DataAccessException {
 		sqlSession.update("mapper.member.updateMember", memberVO);
+	}
+
+	@Override
+	public UserDetails getUserById(String member_id) throws DataAccessException {
+		return sqlSession.selectOne("mapper.member.getUserById", member_id);
 	}
 
 }

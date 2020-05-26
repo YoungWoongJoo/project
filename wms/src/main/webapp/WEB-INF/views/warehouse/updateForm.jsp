@@ -51,6 +51,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
             url: "${contextPath}/warehouse/searchWarehouse.do",
             dataType: "Text",
             data: { warehouse_name: warehouse_name },
+            beforeSend : function(xhr)
+            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
             success: function(data) {
               var warehouseVO = JSON.parse(data)
               $("#select_wh").val(warehouseVO.warehouse_name)
@@ -91,9 +95,9 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         </c:forEach> </select
       ><br />
       창고주명 :
-      <input type="text" name="warehouse_owner" id="warehouse_owner" required autocomplete="off" /><br />
+      <input type="text" name="warehouse_owner" id="warehouse_owner" size="10" required autocomplete="off" /><br />
       코드번호 :
-      <input type="text" name="warehouse_code" id="warehouse_code" required autocomplete="off" /><br />
+      <input type="text" name="warehouse_code" id="warehouse_code" size="10" required autocomplete="off" /><br />
       지역구분 :
       <input type="radio" name="warehouse_region" value="특지" required />특지&nbsp;
       <input type="radio" name="warehouse_region" value="갑지" />갑지&nbsp; <input type="radio" name="warehouse_region" value="을지" />을지<br />
@@ -116,11 +120,12 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           <option value="등외">등외</option>
         </select>
       </div>
-      소재지(시·군단위) : <input type="text" id="warehouse_region_name" name="warehouse_region_name" required autocomplete="off" />
+      소재지(시·군단위) : <input type="text" id="warehouse_region_name" name="warehouse_region_name" size="10" required autocomplete="off" />
       <p>
         <input type="submit" id="btn_submit" value="수정하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>

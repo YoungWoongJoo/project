@@ -13,8 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.mycom.warehouse.member.vo.MemberVO;
 
 public interface MemberController {
-	public ResponseEntity<String> login(@RequestParam Map<String, String> loginMap, HttpServletRequest request, HttpServletResponse response) throws Exception;
-	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	//public ResponseEntity<String> login(@RequestParam Map<String, String> loginMap, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	//public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<String> addMember(@ModelAttribute("memberVO") MemberVO memberVO, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<String> checkId(@RequestParam("id") String id, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	public ResponseEntity<String> updateMember(@ModelAttribute("memberVO") MemberVO memberVO, HttpServletRequest request, HttpServletResponse response) throws Exception;

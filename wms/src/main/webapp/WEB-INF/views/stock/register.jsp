@@ -18,10 +18,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           $("#sort_detail").empty();
           if (this.value == "현미") {
             text =
-              "원산지 : <input type='text' name='stock_sort2' autocomplete='off' required>";
+              "원산지 : <input type='text' name='stock_sort2' autocomplete='off' size='10' required>";
           } else {
             text =
-              "품종 : <input type='text' name='stock_sort2' autocomplete='off' required>";
+              "품종 : <input type='text' name='stock_sort2' autocomplete='off' size='10' required>";
           }
           $("#sort_detail").append(text);
         });
@@ -37,6 +37,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       method="POST"
       action="${contextPath}/stock/addNewStock.do"
     >
+      날짜 : <input id="input_date" type="month" name="stock_month" required><br>
       창고 :
       <select id="select_wh" name="warehouse_name" required>
         <option value="선택" selected disabled>선택</option>
@@ -70,11 +71,13 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         name="stock_quantity_40kg"
         required
         autocomplete="off"
+        size='7'
       />
       <p>
         <input type="submit" value="등록하기"/>
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>

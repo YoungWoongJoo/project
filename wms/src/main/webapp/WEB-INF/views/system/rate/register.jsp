@@ -7,6 +7,14 @@ uri="http://java.sun.com/jsp/jstl/core"%>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script>
       $(document).ready(function() {
+        var date = new Date();
+        var year = date.getFullYear();
+        if(year%2!=0)
+        {
+          year--;
+        }
+        $("span").append(year);
+        $("input[name='rate_year']").val(year);
         $("input[id='rate_sort']").click(function(){
           if(this.value=="보관료 요율")
           {
@@ -71,6 +79,8 @@ uri="http://java.sun.com/jsp/jstl/core"%>
   <div id="div_storageRate" style="display:none">
     <h1>보관료 요율 등록</h1>
     <form id="frm_storageRate" method="POST" action="${contextPath}/system/storageRate/add.do">
+      <span></span>년 2월 기준<p>
+      <input type="hidden" name="rate_year">
       지역구분 :
       <input type="radio" name="warehouse_region" value="특지" required />특지&nbsp;
       <input type="radio" name="warehouse_region" value="갑지" />갑지&nbsp; <input type="radio" name="warehouse_region" value="을지" />을지<br />
@@ -101,12 +111,15 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="submit" id="btn_submit" value="등록하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </div>
 
   <div id="div_cargoRate" style="display:none">
   <h1>하역료 요율 등록</h1>
     <form id="frm_cargoRate" method="POST" action="${contextPath}/system/cargoRate/add.do">
+      <span></span>년 2월 기준<p>
+      <input type="hidden" name="rate_year">
       포장재 종류 : <select id="wrap_sort" name="wrap_sort">
                       <option value="선택" selected disabled>선택</option>
                       <option value="10">10kg</option>
@@ -147,6 +160,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="submit" value="등록하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </div>
   </body>

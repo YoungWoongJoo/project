@@ -15,18 +15,20 @@ uri="http://java.sun.com/jsp/jstl/core"%>
           $("#select_wh").val(warehouse_name);
         }
 
+        /*
         $("input[name='stock_sort1']").click(function() {
           var text = "";
           $("#sort_detail").empty();
           if (this.value == "현미") {
             text =
-              "원산지 : <input type='text' id='stock_sort2' name='stock_sort2' autocomplete='off' required>";
+              "원산지 : <input type='text' id='stock_sort2' name='stock_sort2' size='10' autocomplete='off' required>";
           } else {
             text =
-              "품종 : <input type='text' id='stock_sort2' name='stock_sort2' autocomplete='off' required>";
+              "품종 : <input type='text' id='stock_sort2' name='stock_sort2' size='10' autocomplete='off' required>";
           }
           $("#sort_detail").append(text);
         });
+        */
 
         $("input[name='history_sort1']").click(function() {
           var text = "하역 구분 : ";
@@ -79,7 +81,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         	}
           else if (this.value == "50") {
             var text =
-              "거리 입력 : <input type='text' id='distance' required autocomplete='off'>(m)";
+              "거리 입력 : <input type='text' id='distance' size='3' value='70' required autocomplete='off'>(m)";
               distance.append(text);
           }
         });
@@ -110,6 +112,10 @@ uri="http://java.sun.com/jsp/jstl/core"%>
             url: "${contextPath}/stock/keywordSearch.do",
             dataType: "Text",
             data: { keyword: value },
+            beforeSend : function(xhr)
+            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
             success: function(data, textStatus) {
               if (data != "") {
                 var keyword = JSON.parse(data);
@@ -198,12 +204,11 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       <input type="radio" name="stock_sort1" value="쌀" required />쌀&nbsp;
       <input type="radio" name="stock_sort1" value="현미" />현미(TRQ밥쌀
       포함)&nbsp; <input type="radio" name="stock_sort1" value="벼" />벼<br />
-      <div id="sort_detail">
-        원산지/품종 : 곡종 선택
-      </div>
+        원산지/품종 : <input type='text' id='stock_sort2' name='stock_sort2' size='10' autocomplete='off' required>
       <div id="suggest">
         <div id="suggestList"></div>
       </div>
+      <br>
       단량 :
       <select name="stock_unit" required>
         <option selected disabled>선택</option>
@@ -227,11 +232,12 @@ uri="http://java.sun.com/jsp/jstl/core"%>
       </div>
       <div id="transfer_detail"></div>
       수량 :
-      <input type="text" name="history_quantity" required autocomplete="off" />
+      <input type="text" name="history_quantity" size="7" required autocomplete="off" />
       <p>
         <input type="submit" value="등록하기" />
         <input type="reset" value="취소" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>

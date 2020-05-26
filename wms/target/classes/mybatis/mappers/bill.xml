@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.bill">
+	<!-- 리절트 맵 정의 -->
+	<resultMap id="historyResult" type="HistoryVO">
+		<result property="history_seq_num" column="history_seq_num"/>		
+		<result property="stock_seq_num" column="stock_seq_num"/>		
+		<result property="warehouse_name" column="warehouse_name"/>		
+		<result property="history_date" column="history_date"/>		
+		<result property="stock_year" column="stock_year"/>		
+		<result property="stock_sort1" column="stock_sort1"/>		
+		<result property="stock_sort2" column="stock_sort2"/>		
+		<result property="stock_unit" column="stock_unit"/>		
+		<result property="history_sort1" column="history_sort1"/>		
+		<result property="history_sort2" column="history_sort2"/>		
+		<result property="stock_prev" column="stock_prev"/>		
+		<result property="history_quantity" column="history_quantity"/>		
+		<result property="stock_present" column="stock_present"/>		
+		<result property="history_state" column="history_state"/>		
+	</resultMap>
+	
+	<resultMap id="stockResult" type="StockVO">
+		<result property="stock_seq_num" column="stock_seq_num"/>
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="stock_year" column="stock_year" />
+		<result property="stock_sort1" column="stock_sort1" />
+		<result property="stock_sort2" column="stock_sort2" />
+		<result property="stock_unit" column="stock_unit" />
+		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
+		<result property="stock_quantity_bag" column="stock_quantity_bag" />
+	</resultMap>
+	
+	<resultMap type="MonthlyStockVO" id="monthlyStockResult">
+		<result property="stock_month" column="stock_month"/>
+		<result property="stock_seq_num" column="stock_seq_num"/>
+		<result property="warehouse_name" column="warehouse_name" />
+		<result property="stock_year" column="stock_year" />
+		<result property="stock_sort1" column="stock_sort1" />
+		<result property="stock_sort2" column="stock_sort2" />
+		<result property="stock_unit" column="stock_unit" />
+		<result property="stock_quantity_40kg" column="stock_quantity_40kg" />
+	</resultMap>
+	
+	<select id="CheckUpdateHistory" parameterType="java.util.Map" resultType="int">
+		select count(*) from t_history where warehouse_name=#{warehouse_name} and history_state='enable' and history_date like #{stock_month}||'%'
+	</select>
+	
+	<select id="CheckUpdateMonthlyStock" parameterType="java.util.Map" resultType="int">
+		select count(*) from t_monthly_stock where stock_month = #{stock_month} and warehouse_name = #{warehouse_name}
+	</select>
+	
+	<update id="updateHistory" parameterType="java.util.Map">
+		update t_history set history_state='disable' where warehouse_name=#{warehouse_name} and history_state='enable' and history_date like #{stock_month}||'%'
+	</update>
+		
+	<select id="stockList" resultMap="stockResult" parameterType="java.util.Map">
+		<![CDATA[
+		select * from t_stock where warehouse_name=#{warehouse_name} and stock_quantity_40kg!=0 order by stock_year, stock_sort1, stock_sort2, to_number(stock_unit)
+		]]>
+	</select>
+	
+	<delete id="deleteMonthlyStock" parameterType="java.util.Map">
+		delete from t_monthly_stock where stock_month = #{stock_month} and warehouse_name = #{warehouse_name}
+	</delete>
+	
+	<insert id="insertMonthlyStock" parameterType="java.util.Map">
+		<foreach collection="stockList" item="item" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+                INTO t_monthly_stock  (stock_month,
+                                     	stock_seq_num,
+                                     	warehouse_name,
+                                     	stock_year,
+                                     	stock_sort1,
+                                     	stock_sort2,
+                                     	stock_unit,
+                                     	stock_quantity_40kg) 
+                                 VALUES(#{stock_month},
+                                 		#{item.stock_seq_num},
+                                 		#{item.warehouse_name},
+                                 		#{item.stock_year},
+                                 		#{item.stock_sort1},
+                                 		#{item.stock_sort2},
+                                 		#{item.stock_unit},
+                                 		#{item.stock_quantity_40kg})
+    	</foreach>
+	</insert>
+	
+	<select id="selectmonthlyStockList" resultMap="monthlyStockResult" parameterType="java.util.Map">
+		select stock_seq_num,stock_year,stock_sort1,stock_sort2,stock_unit,stock_quantity_40kg 
+		from (
+				(select stock_seq_num,stock_year,stock_sort1,stock_sort2,stock_unit,stock_quantity_40kg from t_monthly_stock 
+				 where warehouse_name=#{warehouse_name} and stock_month=to_char(add_months(to_date(#{stock_month},'yyyy-mm'),-1),'yyyy-mm'))
+					union 
+				(select stock_seq_num,stock_year,stock_sort1,stock_sort2,stock_unit,stock_quantity_40kg from t_monthly_stock 
+				 where warehouse_name=#{warehouse_name} and stock_month=#{stock_month}
+				and stock_seq_num not in (select stock_seq_num from t_monthly_stock where warehouse_name=#{warehouse_name} 
+										  and stock_month=to_char(add_months(to_date(#{stock_month},'yyyy-mm'),-1),'yyyy-mm')))
+			 )
+		order by stock_year, stock_sort1, stock_sort2, to_number(stock_unit)
+	</select>
+	
+	<select id="selecthistoryList" resultMap="historyResult" parameterType="java.util.Map">
+		select * from t_history 
+								where history_date like #{stock_month} || '%'
+								and warehouse_name = #{warehouse_name}
+								order by stock_year,stock_sort1,stock_sort2,to_number(stock_unit), to_date(history_date,'yyyy-mm-dd'), history_seq_num
+	</select>
+	
+</mapper>

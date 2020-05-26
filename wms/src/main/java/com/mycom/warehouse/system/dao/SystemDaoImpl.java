@@ -1,5 +1,7 @@
 package com.mycom.warehouse.system.dao;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +40,10 @@ public class SystemDaoImpl implements SystemDao {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<StorageRateVO> storageRateList = sqlSession.selectList("mapper.setting.selectStorageRateList");
 		List<CargoRateVO> cargoRateList = sqlSession.selectList("mapper.setting.selectCargoRateList");
+		List<Integer> yearList = sqlSession.selectList("mapper.setting.selectRateYears");
 		map.put("storageRateList", storageRateList);
 		map.put("cargoRateList", cargoRateList);
+		map.put("yearList",yearList);
 		return map;
 	}
 

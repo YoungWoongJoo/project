@@ -85,6 +85,7 @@ uri="http://java.sun.com/jsp/jstl/core"%>
         <input type="submit" value="등록하기" />
         <input type="button" value="취소" onclick="history.back()" />
       </p>
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     </form>
   </body>
 </html>
